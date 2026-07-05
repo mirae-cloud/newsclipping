@@ -1,11 +1,11 @@
 {
   "date": "2026-07-06",
-  "generated_at": "2026-07-05T16:28:49.517160+00:00",
+  "generated_at": "2026-07-05T17:02:30.146236+00:00",
   "summary": {
     "overall_bullets": [
-      "글로벌 파운드리 투자 확대 발표 이어짐",
-      "데이터센터發 전력 인프라 투자 가속",
-      "반도체 수출통제 강화 움직임 포착"
+      "Global Foundry Co.가 차세대 공정 노드에 100억 달러를 투자하겠다고 발표하는 등, AI 가속기 수요에 대응한 글로벌 파운드리 투자 확대 발표가 잇따르고 있다.",
+      "AI 데이터센터 붐에 맞춰 주요 유틸리티 업체들의 전력망 투자가 전년 대비 20% 늘었으며, 재생에너지 통합이 핵심 동인으로 지목되고 있다.",
+      "주요국이 첨단 반도체 장비에 대한 수출통제를 강화하면서 업계 단체들은 공급망 차질 가능성을 경고하고 나섰다."
     ],
     "headlines": [
       {
@@ -36,7 +36,7 @@
       },
       "Robotics & Semiconductors": {
         "sub_summary_bullets": [
-          "글로벌 파운드리 업계 첨단 공정 투자 발표 이어져"
+          "Global Foundry Co.가 차세대 공정 노드에 100억 달러 규모 투자를 발표했으며, 다음 분기 착공을 목표로 AI 가속기용 생산능력 확충에 나선다."
         ],
         "articles": [
           {
@@ -48,7 +48,7 @@
               "Construction to begin next quarter"
             ],
             "insight": "This investment is likely to lift demand for upstream equipment and specialty gas suppliers (estimated). Downstream AI chip designers may benefit from improved capacity access, though pricing pressure could persist.",
-            "published_at": "2026-07-05T12:28:49.518013+00:00",
+            "published_at": "2026-07-05T13:02:30.147652+00:00",
             "category": "Robotics & Semiconductors"
           }
         ],
@@ -111,7 +111,7 @@
       },
       "에너지 & 전력": {
         "sub_summary_bullets": [
-          "데이터센터 전력 수요 급증에 따른 전력망 투자 확대"
+          "데이터센터발 전력 수요 급증에 대응해 유틸리티 업체들의 전력망 투자가 전년 대비 20% 늘었고, 재생에너지 통합이 핵심 투자 동인으로 꼽힌다."
         ],
         "articles": [
           {
@@ -123,7 +123,7 @@
               "Renewable integration cited as key driver"
             ],
             "insight": "Rising data center power demand is estimated to accelerate renewable and grid infrastructure investment. This may possibly create knock-on effects for industrial materials suppliers (transformers, cabling).",
-            "published_at": "2026-07-05T04:28:49.518017+00:00",
+            "published_at": "2026-07-05T05:02:30.147660+00:00",
             "category": "에너지 & 전력"
           }
         ],
@@ -173,7 +173,7 @@
       },
       "Geopolitics & Regulation": {
         "sub_summary_bullets": [
-          "주요국 반도체 수출통제 강화 움직임"
+          "주요국이 첨단 반도체 장비에 대한 신규 수출통제 조치를 발표하며 일부 시장으로의 장비 수출이 영향권에 들었고, 업계는 공급망 차질을 우려하고 있다."
         ],
         "articles": [
           {
@@ -185,7 +185,7 @@
               "Industry groups warn of supply chain disruption"
             ],
             "insight": "Tighter export controls could possibly redirect trade flows toward allied markets (estimated). Downstream device makers in affected regions may face near-term sourcing constraints.",
-            "published_at": "2026-07-05T09:28:49.518020+00:00",
+            "published_at": "2026-07-05T10:02:30.147664+00:00",
             "category": "Geopolitics & Regulation"
           }
         ],
@@ -193,7 +193,7 @@
       },
       "ESG & Sustainability": {
         "sub_summary_bullets": [
-          "글로벌 대기업 탄소중립 공시 규제 강화"
+          "규제당국이 내년 회계연도부터 대형 다국적기업에 적용되는 한층 엄격한 탄소 공시 규정을 확정하면서, 관련 컴플라이언스 비용 상승이 예상된다."
         ],
         "articles": [
           {
@@ -205,7 +205,7 @@
               "Compliance costs expected to rise"
             ],
             "insight": "Stricter disclosure rules are estimated to increase near-term compliance costs across heavy industry. This could possibly accelerate demand for carbon accounting software vendors as a complementary effect.",
-            "published_at": "2026-07-05T01:28:49.518022+00:00",
+            "published_at": "2026-07-05T02:02:30.147666+00:00",
             "category": "ESG & Sustainability"
           }
         ],

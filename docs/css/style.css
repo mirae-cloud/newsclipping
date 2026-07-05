@@ -44,12 +44,24 @@ a {
   padding: 20px 24px 0;
 }
 
+.header-top-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
 .site-title {
   font-family: var(--font-serif);
   font-size: 22px;
   font-weight: 700;
-  margin: 0 0 14px;
+  margin: 0;
   letter-spacing: -0.02em;
+}
+
+.header-date {
+  font-size: 13px;
+  color: var(--color-sub);
 }
 
 .tabs {
@@ -92,12 +104,6 @@ main {
 
 .view.active {
   display: block;
-}
-
-.date-line {
-  color: var(--color-sub);
-  font-size: 13px;
-  margin-bottom: 20px;
 }
 
 /* Summary box */
@@ -408,9 +414,9 @@ main {
   height: 90px;
 }
 
-section.block-title {
+.block-title {
   font-family: var(--font-serif);
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   margin: 8px 0 14px;
 }

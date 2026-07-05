@@ -90,7 +90,10 @@ def build_domestic() -> dict:
     business = {name: empty_block() for name in BUSINESS_CATEGORIES}
 
     industry["Robotics & Semiconductors"] = category_block(
-        ["국내 메모리 3사, HBM4 양산 경쟁 본격화", "파운드리 가동률 개선 조짐"],
+        [
+            "국내 메모리 3사가 평택·이천 라인 증설에 나서며 HBM4 양산 경쟁이 본격화되고 있고, OO전자는 내년 매출 비중 30%를 목표로 내걸었다.",
+            "파운드리 가동률이 두 분기 연속 상승했는데, 레거시 공정 중심의 수주 회복과 고객사 재고 조정 마무리가 맞물린 결과로 풀이된다.",
+        ],
         [
             article(
                 "OO전자, 차세대 HBM4 양산 돌입… 내년 매출 비중 30% 목표",
@@ -116,7 +119,10 @@ def build_domestic() -> dict:
     )
 
     industry["자동차 & 모빌리티"] = category_block(
-        ["전기차 캐즘 국면 지속", "완성차 3사 하이브리드 비중 확대"],
+        [
+            "전기차 수요 둔화(캐즘) 국면이 이어지면서 배터리 소재 업체들의 투자 속도 조절 움직임도 함께 감지되고 있다.",
+            "완성차 3사가 북미 공장 라인 일부를 하이브리드용으로 전환하는 등 하이브리드 생산 비중 확대에 속도를 내고 있다.",
+        ],
         [
             article(
                 "완성차 OO그룹, 하이브리드 생산 비중 40%로 확대",
@@ -133,7 +139,7 @@ def build_domestic() -> dict:
     )
 
     business["Artificial Intelligence"] = category_block(
-        ["대기업 DX 전환 위한 AI 도입 사례 확산"],
+        ["OO그룹이 사내 문서작업 자동화 파일럿을 확대하고 AI 데이터센터 증설까지 검토하면서, 대기업의 DX 전환을 위한 생성형 AI 도입 사례가 빠르게 확산되고 있다."],
         [
             article(
                 "OO그룹, 전사 업무에 생성형 AI 도입… DX 가속",
@@ -149,7 +155,7 @@ def build_domestic() -> dict:
     )
 
     business["M&A / Strategic Investment"] = category_block(
-        ["중견 화학사 인수합병 딜 활발"],
+        ["OO케미칼이 배터리 소재 스타트업 지분을 약 2천억원 규모로 인수하는 등, 양극재·리튬 원천기술 확보를 위한 중견 화학사들의 M&A가 활발하다."],
         [
             article(
                 "OO케미칼, 배터리 소재 스타트업 지분 인수",
@@ -169,9 +175,9 @@ def build_domestic() -> dict:
         "generated_at": NOW_ISO,
         "summary": {
             "overall_bullets": [
-                "반도체 업황 개선 조짐이 뚜렷해지는 하루",
-                "완성차 업계 하이브리드 전환 가속",
-                "대기업 AI 도입 사례 확산 지속",
+                "OO전자가 평택 신규 라인 가동률 90%를 넘기며 차세대 HBM4 양산에 돌입했고, 국내 파운드리 가동률도 두 분기 연속 상승해 반도체 업황 개선 조짐이 뚜렷해지는 하루였다.",
+                "완성차 OO그룹이 전기차 수요 둔화에 대응해 하이브리드 생산 비중을 40%까지 확대하기로 하면서, 업계 전반의 포트폴리오 재편이 가속화되는 모습이다.",
+                "OO그룹이 전사 업무에 생성형 AI를 도입하고 AI 데이터센터 증설까지 검토하는 등, 대기업의 DX 전환을 위한 AI 도입 사례가 계속 확산되고 있다.",
             ],
             "headlines": [
                 {"category": "Robotics & Semiconductors", "headline": "OO전자, 차세대 HBM4 양산 돌입"},
@@ -188,7 +194,7 @@ def build_global() -> dict:
     business = {name: empty_block() for name in BUSINESS_CATEGORIES}
 
     industry["Robotics & Semiconductors"] = category_block(
-        ["글로벌 파운드리 업계 첨단 공정 투자 발표 이어져"],
+        ["Global Foundry Co.가 차세대 공정 노드에 100억 달러 규모 투자를 발표했으며, 다음 분기 착공을 목표로 AI 가속기용 생산능력 확충에 나선다."],
         [
             article(
                 "Global Foundry Co. to invest $10B in next-gen process node",
@@ -204,7 +210,7 @@ def build_global() -> dict:
     )
 
     industry["에너지 & 전력"] = category_block(
-        ["데이터센터 전력 수요 급증에 따른 전력망 투자 확대"],
+        ["데이터센터발 전력 수요 급증에 대응해 유틸리티 업체들의 전력망 투자가 전년 대비 20% 늘었고, 재생에너지 통합이 핵심 투자 동인으로 꼽힌다."],
         [
             article(
                 "Utility firms announce grid upgrades amid AI data center boom",
@@ -220,7 +226,7 @@ def build_global() -> dict:
     )
 
     business["Geopolitics & Regulation"] = category_block(
-        ["주요국 반도체 수출통제 강화 움직임"],
+        ["주요국이 첨단 반도체 장비에 대한 신규 수출통제 조치를 발표하며 일부 시장으로의 장비 수출이 영향권에 들었고, 업계는 공급망 차질을 우려하고 있다."],
         [
             article(
                 "New export control measures target advanced chip equipment",
@@ -236,7 +242,7 @@ def build_global() -> dict:
     )
 
     business["ESG & Sustainability"] = category_block(
-        ["글로벌 대기업 탄소중립 공시 규제 강화"],
+        ["규제당국이 내년 회계연도부터 대형 다국적기업에 적용되는 한층 엄격한 탄소 공시 규정을 확정하면서, 관련 컴플라이언스 비용 상승이 예상된다."],
         [
             article(
                 "Regulators finalize stricter carbon disclosure rules",
@@ -256,9 +262,9 @@ def build_global() -> dict:
         "generated_at": NOW_ISO,
         "summary": {
             "overall_bullets": [
-                "글로벌 파운드리 투자 확대 발표 이어짐",
-                "데이터센터發 전력 인프라 투자 가속",
-                "반도체 수출통제 강화 움직임 포착",
+                "Global Foundry Co.가 차세대 공정 노드에 100억 달러를 투자하겠다고 발표하는 등, AI 가속기 수요에 대응한 글로벌 파운드리 투자 확대 발표가 잇따르고 있다.",
+                "AI 데이터센터 붐에 맞춰 주요 유틸리티 업체들의 전력망 투자가 전년 대비 20% 늘었으며, 재생에너지 통합이 핵심 동인으로 지목되고 있다.",
+                "주요국이 첨단 반도체 장비에 대한 수출통제를 강화하면서 업계 단체들은 공급망 차질 가능성을 경고하고 나섰다.",
             ],
             "headlines": [
                 {"category": "Robotics & Semiconductors", "headline": "Global Foundry Co., $10B 신규 투자 발표"},
@@ -328,9 +334,17 @@ def build_economy() -> dict:
             "가계대출 둔화는 부동산 거래 위축과 맞물려 건설·인프라 업종 수주에 부정적 영향을 줄 가능성이 있다(추정).",
         ),
     }
+    sub_summaries = {
+        "통화·금리": "한국은행 금통위가 만장일치로 기준금리 3.25% 동결을 결정했으며, 물가 안정세를 확인한 뒤 인하 시기를 저울질하는 분위기다.",
+        "물가·환율": "미 연준 발언에 원/달러 환율 변동성이 확대되며 1,380원대 등락이 이어졌고, 수입물가 부담에 대한 우려도 계속되고 있다.",
+        "성장·경기": "2분기 GDP 성장률이 시장 예상치를 소폭 상회했는데, 수출 회복이 성장을 견인한 반면 내수는 여전히 부진한 흐름이다.",
+        "주식·투자": "외국인 순매수 전환에 힘입어 코스피가 반도체·2차전지 대형주 강세 속에 2,850선을 회복했다.",
+        "무역·정책": "정부가 반도체 설비투자 세액공제 연장을 검토하며 국회 세법 개정안 논의에 착수했고, 업계는 추가 확대를 요구하고 있다.",
+        "금융·가계": "금융당국의 대출 규제 효과가 반영되며 가계대출 증가세가 3개월 연속 둔화됐고, 주택 거래량 감소와도 맞물리는 모습이다.",
+    }
     for i, (group, (title, bullets, insight)) in enumerate(templates.items()):
         news_groups[group] = category_block(
-            [f"{group} 관련 오늘의 핵심 동향"],
+            [sub_summaries[group]],
             [article(title, bullets, insight, group, 2 + i, f"https://example.com/economy/{i}")],
         )
 
@@ -351,8 +365,8 @@ def build_economy() -> dict:
         "news": {
             "summary": {
                 "overall_bullets": [
-                    "한국은행 기준금리 동결, 원/달러 환율 1,380원대 등락",
-                    "코스피 반도체 강세로 2,850선 회복",
+                    "한국은행 금융통화위원회가 만장일치로 기준금리를 3.25%로 동결했고, 원/달러 환율은 미 연준 발언에 따른 변동성 속에 1,380원대에서 등락했다.",
+                    "외국인 자금이 순매수로 전환하며 코스피가 반도체·2차전지 대형주 강세에 힘입어 2,850선을 회복하는 모습을 보였다.",
                 ],
                 "headlines": [{"category": g, "headline": v[0]} for g, v in templates.items()],
             },

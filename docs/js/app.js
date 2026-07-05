@@ -7,7 +7,10 @@ const state = {
   industry: { selectedCategory: null, source: "domestic" },
   business: { selectedCategory: null, source: "domestic" },
   economySelectedGroup: null,
+  saved: { kindFilter: "all", subFilter: null },
 };
+
+const KIND_LABELS = { economy: "경제", industry: "산업군", business: "Business" };
 
 function escapeHtml(str) {
   return str
@@ -118,10 +121,6 @@ function renderSummaryBox(summary) {
   `;
 }
 
-function dateLine(dateStr) {
-  return `<div class="date-line">${dateStr} 기준</div>`;
-}
-
 // ---------- Economy tab ----------
 
 const INDICATOR_META = [
@@ -200,7 +199,6 @@ function renderEconomy() {
   title.className = "block-title";
   title.textContent = "경제 지표";
   view.appendChild(title);
-  view.insertAdjacentHTML("beforeend", dateLine(economy.date));
 
   const grid = document.createElement("div");
   grid.className = "indicator-grid";
@@ -226,7 +224,7 @@ function renderEconomy() {
   }
 
   const block = economy.news.keyword_groups[state.economySelectedGroup];
-  renderCategoryDetail(detail, block, { categoryLabel: state.economySelectedGroup });
+  renderCategoryDetail(detail, block, { categoryLabel: state.economySelectedGroup, kind: "economy" });
 }
 
 // ---------- Industry / Business tabs ----------
@@ -268,7 +266,6 @@ function renderCategoryTab(kind) {
   title.className = "block-title";
   title.textContent = kind === "industry" ? "산업군" : "Business";
   view.appendChild(title);
-  view.insertAdjacentHTML("beforeend", dateLine(dataset.date));
 
   view.insertAdjacentHTML("beforeend", renderSummaryBox(dataset.summary));
 
@@ -313,7 +310,7 @@ function renderCategoryTab(kind) {
   const currentDataset = state[s.source];
   const block = currentDataset.categories[kind][s.selectedCategory];
   const sourceLabel = s.source === "domestic" ? "국내" : "글로벌";
-  renderCategoryDetail(detail, block, { categoryLabel: s.selectedCategory, sourceLabel });
+  renderCategoryDetail(detail, block, { categoryLabel: s.selectedCategory, sourceLabel, kind });
 }
 
 // ---------- Saved tab ----------
@@ -327,9 +324,9 @@ function renderSaved() {
   title.textContent = "저장됨";
   view.appendChild(title);
 
-  const saved = Object.values(getSaved()).sort((a, b) => new Date(b.saved_at) - new Date(a.saved_at));
+  const all = Object.values(getSaved()).sort((a, b) => new Date(b.saved_at) - new Date(a.saved_at));
 
-  if (!saved.length) {
+  if (!all.length) {
     view.insertAdjacentHTML(
       "beforeend",
       `<div class="empty-state">저장한 기사가 없습니다. 기사 카드의 ☆ 아이콘을 눌러 저장해보세요.</div>`
@@ -337,8 +334,90 @@ function renderSaved() {
     return;
   }
 
-  saved.forEach((article) => {
-    view.appendChild(createArticleCard(article, { categoryLabel: article.categoryLabel, sourceLabel: article.sourceLabel }));
+  const s = state.saved;
+
+  // 대분류(경제/산업군/Business) 필터 칩
+  const kindGrid = document.createElement("div");
+  kindGrid.className = "category-grid";
+  const kindCounts = { economy: 0, industry: 0, business: 0 };
+  all.forEach((a) => {
+    if (kindCounts[a.kind] !== undefined) kindCounts[a.kind] += 1;
+  });
+
+  const allBtn = document.createElement("button");
+  allBtn.className = "category-btn" + (s.kindFilter === "all" ? " active" : "");
+  allBtn.innerHTML = `전체 <span class="count">${all.length}</span>`;
+  allBtn.addEventListener("click", () => {
+    s.kindFilter = "all";
+    s.subFilter = null;
+    renderSaved();
+  });
+  kindGrid.appendChild(allBtn);
+
+  Object.entries(KIND_LABELS).forEach(([kind, label]) => {
+    const btn = document.createElement("button");
+    btn.className = "category-btn" + (s.kindFilter === kind ? " active" : "");
+    btn.innerHTML = `${escapeHtml(label)} <span class="count">${kindCounts[kind]}</span>`;
+    btn.addEventListener("click", () => {
+      s.kindFilter = kind;
+      s.subFilter = null;
+      renderSaved();
+    });
+    kindGrid.appendChild(btn);
+  });
+  view.appendChild(kindGrid);
+
+  let filtered = s.kindFilter === "all" ? all : all.filter((a) => a.kind === s.kindFilter);
+
+  // 하위 카테고리 필터 칩 (대분류를 선택했을 때만)
+  if (s.kindFilter !== "all") {
+    const subCounts = {};
+    filtered.forEach((a) => {
+      subCounts[a.categoryLabel] = (subCounts[a.categoryLabel] || 0) + 1;
+    });
+
+    const subGrid = document.createElement("div");
+    subGrid.className = "category-grid";
+
+    const subAllBtn = document.createElement("button");
+    subAllBtn.className = "category-btn" + (!s.subFilter ? " active" : "");
+    subAllBtn.innerHTML = `전체 <span class="count">${filtered.length}</span>`;
+    subAllBtn.addEventListener("click", () => {
+      s.subFilter = null;
+      renderSaved();
+    });
+    subGrid.appendChild(subAllBtn);
+
+    Object.entries(subCounts).forEach(([label, count]) => {
+      const btn = document.createElement("button");
+      btn.className = "category-btn" + (s.subFilter === label ? " active" : "");
+      btn.innerHTML = `${escapeHtml(label)} <span class="count">${count}</span>`;
+      btn.addEventListener("click", () => {
+        s.subFilter = label;
+        renderSaved();
+      });
+      subGrid.appendChild(btn);
+    });
+    view.appendChild(subGrid);
+
+    if (s.subFilter) {
+      filtered = filtered.filter((a) => a.categoryLabel === s.subFilter);
+    }
+  }
+
+  const list = document.createElement("div");
+  list.className = "category-detail";
+  view.appendChild(list);
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state">이 분류에 저장된 기사가 없습니다.</div>`;
+    return;
+  }
+
+  filtered.forEach((article) => {
+    list.appendChild(
+      createArticleCard(article, { categoryLabel: article.categoryLabel, sourceLabel: article.sourceLabel, kind: article.kind })
+    );
   });
 }
 
@@ -370,6 +449,7 @@ async function init() {
   state.economy = economy;
   state.domestic = domestic;
   state.global = global;
+  document.getElementById("header-date").textContent = `${economy.date} 기준`;
   switchTab("economy");
 }
 

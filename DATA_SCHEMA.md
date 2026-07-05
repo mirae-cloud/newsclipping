@@ -24,7 +24,7 @@
   "date": "YYYY-MM-DD",
   "generated_at": "ISO 8601",
   "summary": {
-    "overall_bullets": ["string", ...],
+    "overall_bullets": ["string — 아래 '요약 bullet 분량' 참고", ...],
     "headlines": [{"category": "string", "headline": "string"}, ...]
   },
   "categories": {
@@ -64,6 +64,13 @@
   }
 }
 ```
+
+## 요약 bullet 분량 (`overall_bullets` / `sub_summary_bullets`)
+
+- 이 두 bullet은 "오늘의 핵심 요약"에 해당하며, 카테고리명이나 제목만 나열하는 짧은 구가 아니라
+  **해당 기사들의 실제 내용(수치·주체·배경)을 반영한 완결된 문장**이어야 한다.
+- 분량은 초기 시안 대비 약 **2.5배** 수준(문장당 40~80자 내외)을 기준으로 한다.
+- `article.bullets`(기사별 2~3개 요약)는 5-1 스펙의 별도 규칙(짧은 bullet)을 그대로 따르며, 이 분량 기준의 대상이 아니다.
 
 ## 소스 구분
 
