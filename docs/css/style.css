@@ -1,0 +1,426 @@
+:root {
+  --color-ink: #1a1a1a;
+  --color-sub: #6b6b6b;
+  --color-bg: #ffffff;
+  --color-bg-soft: #f7f6f2;
+  --color-border: #e6e3da;
+  --color-accent: #1f3c63;
+  --color-accent-soft: #eaf0f7;
+  --color-insight: #a85a1d;
+  --color-insight-soft: #fbf1e5;
+  --font-serif: "Noto Serif KR", serif;
+  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+}
+
+.site-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.tab-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-sub);
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tab-btn:hover {
+  color: var(--color-ink);
+}
+
+.tab-btn.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 24px 96px;
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+.date-line {
+  color: var(--color-sub);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* Summary box */
+.summary-box {
+  background: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+
+.summary-box h2 {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  margin: 0 0 10px;
+  color: var(--color-sub);
+  font-weight: 600;
+}
+
+.summary-bullets {
+  margin: 0 0 14px;
+  padding-left: 18px;
+}
+
+.summary-bullets li {
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.headline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.headline-chip {
+  font-size: 13px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.headline-chip b {
+  font-weight: 700;
+}
+
+/* Category buttons */
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.category-btn {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.category-btn:hover {
+  border-color: var(--color-accent);
+}
+
+.category-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.category-btn .count {
+  color: var(--color-sub);
+  font-size: 12px;
+}
+
+.category-btn.active .count {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Source toggle (국내/글로벌) */
+.source-toggle {
+  display: inline-flex;
+  margin: 20px 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--color-bg-soft);
+}
+
+.source-toggle button {
+  appearance: none;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--color-sub);
+}
+
+.source-toggle button.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.category-detail {
+  border-top: 1px dashed var(--color-border);
+  padding-top: 16px;
+}
+
+.sub-summary {
+  font-size: 14px;
+  color: var(--color-sub);
+  margin-bottom: 18px;
+}
+
+.sub-summary li {
+  margin-bottom: 3px;
+}
+
+/* Article cards */
+.article-card {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.article-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.article-title {
+  flex: 1;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.article-title a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.article-title a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+.article-meta {
+  font-size: 12px;
+  color: var(--color-sub);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.icon-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  padding: 2px 4px;
+  color: var(--color-sub);
+}
+
+.icon-btn.bookmark.active {
+  color: var(--color-accent);
+}
+
+.chevron {
+  color: var(--color-sub);
+  transition: transform 0.15s ease;
+  padding-top: 3px;
+}
+
+.article-card.expanded .chevron {
+  transform: rotate(180deg);
+}
+
+.article-body {
+  display: none;
+  padding: 0 16px 18px 16px;
+}
+
+.article-card.expanded .article-body {
+  display: block;
+}
+
+.article-bullets {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  font-size: 14.5px;
+}
+
+.article-bullets li {
+  margin-bottom: 4px;
+}
+
+.insight-block {
+  border-left: 3px solid var(--color-insight);
+  background: var(--color-insight-soft);
+  padding: 12px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  color: #4a3420;
+}
+
+.insight-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--color-insight);
+  margin-bottom: 5px;
+}
+
+.badge-tag {
+  background: var(--color-insight);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin: 0 1px;
+  white-space: nowrap;
+}
+
+.extra-topics {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--color-sub);
+}
+
+.empty-state {
+  color: var(--color-sub);
+  font-size: 14px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+/* Economy indicator cards */
+.indicator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.indicator-card {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.indicator-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-sub);
+  margin-bottom: 10px;
+}
+
+.indicator-numbers {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 12px;
+}
+
+.indicator-numbers div {
+  flex: 1;
+}
+
+.indicator-numbers .label {
+  font-size: 11px;
+  color: var(--color-sub);
+  margin-bottom: 2px;
+}
+
+.indicator-numbers .value {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-serif);
+}
+
+.indicator-numbers .value.today {
+  color: var(--color-accent);
+}
+
+.indicator-chart {
+  height: 90px;
+}
+
+section.block-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  margin: 8px 0 14px;
+}
+
+@media (max-width: 600px) {
+  .header-inner, main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .tabs {
+    overflow-x: auto;
+  }
+}

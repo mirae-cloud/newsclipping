@@ -1,0 +1,226 @@
+{
+  "date": "2026-07-06",
+  "generated_at": "2026-07-05T16:28:49.517160+00:00",
+  "summary": {
+    "overall_bullets": [
+      "글로벌 파운드리 투자 확대 발표 이어짐",
+      "데이터센터發 전력 인프라 투자 가속",
+      "반도체 수출통제 강화 움직임 포착"
+    ],
+    "headlines": [
+      {
+        "category": "Robotics & Semiconductors",
+        "headline": "Global Foundry Co., $10B 신규 투자 발표"
+      },
+      {
+        "category": "에너지 & 전력",
+        "headline": "전력망 업그레이드 발표 잇따라"
+      },
+      {
+        "category": "Geopolitics & Regulation",
+        "headline": "첨단 반도체 장비 수출통제 강화"
+      }
+    ]
+  },
+  "categories": {
+    "industry": {
+      "Finance (금융)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "TMT (기술·미디어·통신)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Robotics & Semiconductors": {
+        "sub_summary_bullets": [
+          "글로벌 파운드리 업계 첨단 공정 투자 발표 이어져"
+        ],
+        "articles": [
+          {
+            "id": "fb61f45f1127",
+            "title": "Global Foundry Co. to invest $10B in next-gen process node",
+            "url": "https://example.com/global/foundry-investment",
+            "bullets": [
+              "Capacity expansion targeted for AI accelerator demand",
+              "Construction to begin next quarter"
+            ],
+            "insight": "This investment is likely to lift demand for upstream equipment and specialty gas suppliers (estimated). Downstream AI chip designers may benefit from improved capacity access, though pricing pressure could persist.",
+            "published_at": "2026-07-05T12:28:49.518013+00:00",
+            "category": "Robotics & Semiconductors"
+          }
+        ],
+        "extra_topics": []
+      },
+      "헬스케어 & 라이프사이언스": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "소비재 & 리테일 (B2C)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "여행 (Travel)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "자동차 & 모빌리티": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "산업재 (Industrial Goods)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "항공 & 방산": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "운송 & 물류": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "건설 & 인프라": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "부동산": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "소재 & 화학": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Oil & Gas": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "에너지 & 전력": {
+        "sub_summary_bullets": [
+          "데이터센터 전력 수요 급증에 따른 전력망 투자 확대"
+        ],
+        "articles": [
+          {
+            "id": "7eea3498dea6",
+            "title": "Utility firms announce grid upgrades amid AI data center boom",
+            "url": "https://example.com/global/grid-upgrade",
+            "bullets": [
+              "Grid capacity investment up 20% year-over-year",
+              "Renewable integration cited as key driver"
+            ],
+            "insight": "Rising data center power demand is estimated to accelerate renewable and grid infrastructure investment. This may possibly create knock-on effects for industrial materials suppliers (transformers, cabling).",
+            "published_at": "2026-07-05T04:28:49.518017+00:00",
+            "category": "에너지 & 전력"
+          }
+        ],
+        "extra_topics": []
+      },
+      "공공·사회·교육": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      }
+    },
+    "business": {
+      "M&A / Strategic Investment": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Financial Investment (VC/PE)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Corporate Finance / Turnaround": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Strategy": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "PMI / Operations": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "New Business / Business Building": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Go-To-Market": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Geopolitics & Regulation": {
+        "sub_summary_bullets": [
+          "주요국 반도체 수출통제 강화 움직임"
+        ],
+        "articles": [
+          {
+            "id": "f03a387dae99",
+            "title": "New export control measures target advanced chip equipment",
+            "url": "https://example.com/global/export-controls",
+            "bullets": [
+              "Affects tooling exports to select markets",
+              "Industry groups warn of supply chain disruption"
+            ],
+            "insight": "Tighter export controls could possibly redirect trade flows toward allied markets (estimated). Downstream device makers in affected regions may face near-term sourcing constraints.",
+            "published_at": "2026-07-05T09:28:49.518020+00:00",
+            "category": "Geopolitics & Regulation"
+          }
+        ],
+        "extra_topics": []
+      },
+      "ESG & Sustainability": {
+        "sub_summary_bullets": [
+          "글로벌 대기업 탄소중립 공시 규제 강화"
+        ],
+        "articles": [
+          {
+            "id": "70a1f37b9d6a",
+            "title": "Regulators finalize stricter carbon disclosure rules",
+            "url": "https://example.com/global/carbon-disclosure",
+            "bullets": [
+              "Applies to large-cap multinationals from next fiscal year",
+              "Compliance costs expected to rise"
+            ],
+            "insight": "Stricter disclosure rules are estimated to increase near-term compliance costs across heavy industry. This could possibly accelerate demand for carbon accounting software vendors as a complementary effect.",
+            "published_at": "2026-07-05T01:28:49.518022+00:00",
+            "category": "ESG & Sustainability"
+          }
+        ],
+        "extra_topics": []
+      },
+      "Risk & Resilience": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Artificial Intelligence": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      }
+    }
+  }
+}

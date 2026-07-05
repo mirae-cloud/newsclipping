@@ -1,0 +1,242 @@
+{
+  "date": "2026-07-06",
+  "generated_at": "2026-07-05T16:28:49.517160+00:00",
+  "summary": {
+    "overall_bullets": [
+      "반도체 업황 개선 조짐이 뚜렷해지는 하루",
+      "완성차 업계 하이브리드 전환 가속",
+      "대기업 AI 도입 사례 확산 지속"
+    ],
+    "headlines": [
+      {
+        "category": "Robotics & Semiconductors",
+        "headline": "OO전자, 차세대 HBM4 양산 돌입"
+      },
+      {
+        "category": "자동차 & 모빌리티",
+        "headline": "완성차 OO그룹, 하이브리드 생산 비중 확대"
+      },
+      {
+        "category": "Artificial Intelligence",
+        "headline": "OO그룹, 전사 생성형 AI 도입"
+      }
+    ]
+  },
+  "categories": {
+    "industry": {
+      "Finance (금융)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "TMT (기술·미디어·통신)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Robotics & Semiconductors": {
+        "sub_summary_bullets": [
+          "국내 메모리 3사, HBM4 양산 경쟁 본격화",
+          "파운드리 가동률 개선 조짐"
+        ],
+        "articles": [
+          {
+            "id": "9232e1f8c658",
+            "title": "OO전자, 차세대 HBM4 양산 돌입… 내년 매출 비중 30% 목표",
+            "url": "https://example.com/news/hbm4-ramp-up",
+            "bullets": [
+              "평택 신규 라인 가동률 90% 돌파",
+              "AI 서버향 수요 증가가 주 배경"
+            ],
+            "insight": "메모리 업황 개선은 후방산업인 반도체 장비·소재(증착·식각 장비, 특수가스) 수요 회복으로 이어질 가능성이 있다. 전방산업인 서버·데이터센터 업체 입장에서는 원가 부담이 이어질 수 있어 AI 인프라 투자 속도에 제약 요인이 될 수 있다는 추정도 나온다. 일견 무관해 보이지만, 메모리 가격 상승은 PC·스마트폰 교체 수요를 늦추는 대체효과로 소비재·리테일 업계 단가 정책에도 간접 영향을 줄 가능성이 있다.",
+            "published_at": "2026-07-05T13:28:49.517529+00:00",
+            "category": "Robotics & Semiconductors"
+          },
+          {
+            "id": "f4135f3d678f",
+            "title": "파운드리 가동률 두 분기 연속 상승",
+            "url": "https://example.com/news/foundry-utilization",
+            "bullets": [
+              "레거시 공정 중심 수주 회복",
+              "고객사 재고 조정 마무리 국면"
+            ],
+            "insight": "가동률 회복은 장비 재투자로 이어져 후방 장비업체 실적 개선에 긍정적일 것으로 추정된다. 다만 레거시 공정 중심 회복이라 첨단 공정 투자로 바로 연결될지는 불확실하다.",
+            "published_at": "2026-07-05T06:28:49.517534+00:00",
+            "category": "Robotics & Semiconductors"
+          }
+        ],
+        "extra_topics": [
+          "온디바이스 AI 칩 스타트업 투자 확대"
+        ]
+      },
+      "헬스케어 & 라이프사이언스": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "소비재 & 리테일 (B2C)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "여행 (Travel)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "자동차 & 모빌리티": {
+        "sub_summary_bullets": [
+          "전기차 캐즘 국면 지속",
+          "완성차 3사 하이브리드 비중 확대"
+        ],
+        "articles": [
+          {
+            "id": "b0e6e23a5c87",
+            "title": "완성차 OO그룹, 하이브리드 생산 비중 40%로 확대",
+            "url": "https://example.com/news/hybrid-shift",
+            "bullets": [
+              "전기차 수요 둔화에 대응한 포트폴리오 조정",
+              "북미 공장 라인 일부 전환"
+            ],
+            "insight": "전기차 캐즘은 배터리 소재(양극재·리튬) 후방산업 투자 속도 조절로 이어질 가능성이 있다(추정). 반대로 하이브리드 부품(엔진·변속기) 공급망에는 단기 수혜가 갈 것으로 보인다. 타 산업 대체효과로는 완성차 대신 대중교통·공유 모빌리티 수요가 일부 흡수할 가능성이 있다.",
+            "published_at": "2026-07-05T10:28:49.517537+00:00",
+            "category": "자동차 & 모빌리티"
+          }
+        ],
+        "extra_topics": []
+      },
+      "산업재 (Industrial Goods)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "항공 & 방산": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "운송 & 물류": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "건설 & 인프라": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "부동산": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "소재 & 화학": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Oil & Gas": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "에너지 & 전력": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "공공·사회·교육": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      }
+    },
+    "business": {
+      "M&A / Strategic Investment": {
+        "sub_summary_bullets": [
+          "중견 화학사 인수합병 딜 활발"
+        ],
+        "articles": [
+          {
+            "id": "07afd048585b",
+            "title": "OO케미칼, 배터리 소재 스타트업 지분 인수",
+            "url": "https://example.com/news/chemical-ma",
+            "bullets": [
+              "양극재 원천기술 확보 목적",
+              "인수가 약 2천억원 규모로 추정"
+            ],
+            "insight": "이번 인수는 후방 원재료(리튬·전구체) 조달 안정화 목적으로 해석된다. 전방산업인 배터리셀 제조사 입장에서는 공급 안정성이 개선될 가능성이 있다.",
+            "published_at": "2026-07-05T08:28:49.517542+00:00",
+            "category": "M&A / Strategic Investment"
+          }
+        ],
+        "extra_topics": []
+      },
+      "Financial Investment (VC/PE)": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Corporate Finance / Turnaround": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Strategy": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "PMI / Operations": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "New Business / Business Building": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Go-To-Market": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Geopolitics & Regulation": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "ESG & Sustainability": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Risk & Resilience": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "Artificial Intelligence": {
+        "sub_summary_bullets": [
+          "대기업 DX 전환 위한 AI 도입 사례 확산"
+        ],
+        "articles": [
+          {
+            "id": "67b0951b9889",
+            "title": "OO그룹, 전사 업무에 생성형 AI 도입… DX 가속",
+            "url": "https://example.com/news/genai-dx",
+            "bullets": [
+              "사내 문서작업 자동화 파일럿 확대",
+              "AI 데이터센터 증설 검토"
+            ],
+            "insight": "AI 인프라 투자 확대는 전력·에너지 산업으로의 전방 수요 증가로 이어질 가능성이 있다(추정). 데이터센터 냉각 관련 소재·부품 산업에도 간접 수혜가 예상된다.",
+            "published_at": "2026-07-05T11:28:49.517540+00:00",
+            "category": "Artificial Intelligence"
+          }
+        ],
+        "extra_topics": []
+      }
+    }
+  }
+}
