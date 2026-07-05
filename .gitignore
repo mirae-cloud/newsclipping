@@ -1,0 +1,16 @@
+# 환경변수 / 비밀값
+.env
+.env.*
+secrets/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 프로젝트와 무관한 개인 자료
+자율주행 자동차 산업 분석 발표자료.pdf
+
+# OS
+.DS_Store
