@@ -1,0 +1,531 @@
+{
+  "industry": {
+    "Finance (금융)": {
+      "ko": [
+        "은행",
+        "금융지주",
+        "대출",
+        "카드",
+        "보험",
+        "증권",
+        "금융규제"
+      ],
+      "en": [
+        "bank",
+        "financial holding",
+        "insurance",
+        "securities"
+      ]
+    },
+    "TMT (기술·미디어·통신)": {
+      "ko": [
+        "통신",
+        "미디어",
+        "플랫폼",
+        "콘텐츠",
+        "클라우드",
+        "소프트웨어",
+        "빅테크"
+      ],
+      "en": [
+        "telecom",
+        "media platform",
+        "cloud software",
+        "big tech"
+      ]
+    },
+    "Robotics & Semiconductors": {
+      "ko": [
+        "반도체",
+        "파운드리",
+        "HBM",
+        "메모리",
+        "로봇",
+        "로보틱스",
+        "자동화"
+      ],
+      "en": [
+        "semiconductor",
+        "foundry",
+        "HBM memory",
+        "robotics"
+      ]
+    },
+    "헬스케어 & 라이프사이언스": {
+      "ko": [
+        "제약",
+        "바이오",
+        "신약",
+        "의료기기",
+        "병원",
+        "임상",
+        "헬스케어"
+      ],
+      "en": [
+        "pharmaceutical",
+        "biotech",
+        "medical device",
+        "clinical trial"
+      ]
+    },
+    "소비재 & 리테일 (B2C)": {
+      "ko": [
+        "소비재",
+        "유통",
+        "리테일",
+        "이커머스",
+        "식품",
+        "화장품",
+        "농업",
+        "농산물"
+      ],
+      "en": [
+        "consumer goods",
+        "retail",
+        "e-commerce",
+        "agriculture"
+      ]
+    },
+    "여행 (Travel)": {
+      "ko": [
+        "여행",
+        "관광",
+        "여객 항공",
+        "호텔",
+        "항공권"
+      ],
+      "en": [
+        "travel",
+        "tourism",
+        "airline passenger",
+        "hotel"
+      ]
+    },
+    "자동차 & 모빌리티": {
+      "ko": [
+        "자동차",
+        "전기차",
+        "완성차",
+        "모빌리티",
+        "자율주행"
+      ],
+      "en": [
+        "automaker",
+        "electric vehicle",
+        "mobility",
+        "autonomous driving"
+      ]
+    },
+    "산업재 (Industrial Goods)": {
+      "ko": [
+        "철강",
+        "비철금속",
+        "기계",
+        "장비",
+        "부품",
+        "조선",
+        "중공업"
+      ],
+      "en": [
+        "steel",
+        "machinery",
+        "shipbuilding",
+        "industrial equipment"
+      ]
+    },
+    "항공 & 방산": {
+      "ko": [
+        "방산",
+        "국방",
+        "무기",
+        "항공우주",
+        "방위산업"
+      ],
+      "en": [
+        "defense industry",
+        "aerospace",
+        "military weapons"
+      ]
+    },
+    "운송 & 물류": {
+      "ko": [
+        "물류",
+        "화물",
+        "해운",
+        "택배",
+        "공급망 운송"
+      ],
+      "en": [
+        "logistics",
+        "shipping freight",
+        "supply chain transport"
+      ]
+    },
+    "건설 & 인프라": {
+      "ko": [
+        "건설",
+        "건설사",
+        "수주",
+        "인프라",
+        "플랜트",
+        "SOC"
+      ],
+      "en": [
+        "construction",
+        "infrastructure project",
+        "engineering contract"
+      ]
+    },
+    "부동산": {
+      "ko": [
+        "부동산",
+        "아파트",
+        "분양",
+        "리츠",
+        "상업용부동산",
+        "주택시장"
+      ],
+      "en": [
+        "real estate",
+        "housing market",
+        "REIT"
+      ]
+    },
+    "소재 & 화학": {
+      "ko": [
+        "석유화학",
+        "나프타",
+        "기초화학",
+        "배터리소재",
+        "양극재",
+        "리튬",
+        "희토류",
+        "신소재"
+      ],
+      "en": [
+        "petrochemical",
+        "battery materials",
+        "cathode material",
+        "lithium"
+      ]
+    },
+    "Oil & Gas": {
+      "ko": [
+        "석유",
+        "원유",
+        "천연가스",
+        "LNG",
+        "정유",
+        "유가"
+      ],
+      "en": [
+        "crude oil",
+        "natural gas",
+        "LNG",
+        "refinery"
+      ]
+    },
+    "에너지 & 전력": {
+      "ko": [
+        "발전",
+        "전력",
+        "원자력",
+        "태양광",
+        "풍력",
+        "신재생",
+        "송전",
+        "한전"
+      ],
+      "en": [
+        "power generation",
+        "electricity grid",
+        "nuclear power",
+        "renewable energy"
+      ]
+    },
+    "공공·사회·교육": {
+      "ko": [
+        "정부정책",
+        "공공",
+        "규제",
+        "교육",
+        "사회복지",
+        "비영리"
+      ],
+      "en": [
+        "government policy",
+        "public sector",
+        "education policy"
+      ]
+    }
+  },
+  "business": {
+    "M&A / Strategic Investment": {
+      "ko": [
+        "인수합병",
+        "M&A",
+        "지분인수",
+        "전략적투자",
+        "합병"
+      ],
+      "en": [
+        "merger acquisition",
+        "M&A",
+        "strategic investment"
+      ]
+    },
+    "Financial Investment (VC/PE)": {
+      "ko": [
+        "사모펀드",
+        "PE",
+        "바이아웃",
+        "엑시트",
+        "벤처투자",
+        "VC",
+        "투자유치"
+      ],
+      "en": [
+        "private equity",
+        "venture capital",
+        "buyout",
+        "exit deal"
+      ]
+    },
+    "Corporate Finance / Turnaround": {
+      "ko": [
+        "실적",
+        "어닝",
+        "적자",
+        "흑자",
+        "영업이익",
+        "구조조정",
+        "주가",
+        "재무"
+      ],
+      "en": [
+        "earnings",
+        "operating profit",
+        "restructuring",
+        "turnaround"
+      ]
+    },
+    "Strategy": {
+      "ko": [
+        "사업전략",
+        "사업재편",
+        "신규전략",
+        "마케팅 전략",
+        "세일즈 전략"
+      ],
+      "en": [
+        "business strategy",
+        "marketing strategy",
+        "growth strategy"
+      ]
+    },
+    "PMI / Operations": {
+      "ko": [
+        "통합",
+        "운영효율",
+        "생산",
+        "오퍼레이션",
+        "PMI"
+      ],
+      "en": [
+        "post-merger integration",
+        "operations efficiency"
+      ]
+    },
+    "New Business / Business Building": {
+      "ko": [
+        "신사업",
+        "사업확장",
+        "신규진출",
+        "벤처빌딩"
+      ],
+      "en": [
+        "new business",
+        "business building",
+        "expansion"
+      ]
+    },
+    "Go-To-Market": {
+      "ko": [
+        "해외진출",
+        "시장진출",
+        "지역확장",
+        "글로벌진출"
+      ],
+      "en": [
+        "market entry",
+        "global expansion"
+      ]
+    },
+    "Geopolitics & Regulation": {
+      "ko": [
+        "지정학",
+        "관세",
+        "수출통제",
+        "규제",
+        "제재",
+        "무역분쟁"
+      ],
+      "en": [
+        "geopolitics",
+        "export control",
+        "tariff",
+        "sanctions"
+      ]
+    },
+    "ESG & Sustainability": {
+      "ko": [
+        "ESG",
+        "탄소중립",
+        "지속가능",
+        "친환경",
+        "공시규제"
+      ],
+      "en": [
+        "ESG",
+        "carbon neutral",
+        "sustainability disclosure"
+      ]
+    },
+    "Risk & Resilience": {
+      "ko": [
+        "공급망",
+        "리스크",
+        "사이버보안",
+        "위기관리",
+        "회복탄력성"
+      ],
+      "en": [
+        "supply chain risk",
+        "cybersecurity",
+        "crisis management"
+      ]
+    },
+    "Artificial Intelligence": {
+      "ko": [
+        "AI",
+        "인공지능",
+        "LLM",
+        "생성형AI",
+        "데이터센터",
+        "AI인프라",
+        "GPU"
+      ],
+      "en": [
+        "artificial intelligence",
+        "generative AI",
+        "data center",
+        "AI infrastructure",
+        "GPU"
+      ]
+    }
+  },
+  "economy": {
+    "통화·금리": {
+      "ko": [
+        "기준금리",
+        "금리",
+        "국채",
+        "채권",
+        "한국은행",
+        "금통위",
+        "Fed",
+        "FOMC",
+        "연준",
+        "금리인하",
+        "금리인상"
+      ],
+      "en": [
+        "interest rate",
+        "Fed",
+        "FOMC",
+        "central bank",
+        "rate cut",
+        "rate hike"
+      ]
+    },
+    "물가·환율": {
+      "ko": [
+        "소비자물가",
+        "인플레이션",
+        "CPI",
+        "원/달러",
+        "환율",
+        "외환"
+      ],
+      "en": [
+        "inflation",
+        "CPI",
+        "exchange rate",
+        "currency"
+      ]
+    },
+    "성장·경기": {
+      "ko": [
+        "GDP",
+        "경제성장률",
+        "경기 침체",
+        "실업률",
+        "고용지표"
+      ],
+      "en": [
+        "GDP",
+        "economic growth",
+        "recession",
+        "unemployment rate"
+      ]
+    },
+    "주식·투자": {
+      "ko": [
+        "코스피",
+        "코스닥",
+        "증권",
+        "증시",
+        "나스닥",
+        "투자"
+      ],
+      "en": [
+        "stock market",
+        "Nasdaq",
+        "equity investment"
+      ]
+    },
+    "무역·정책": {
+      "ko": [
+        "수출",
+        "수입",
+        "무역수지",
+        "관세",
+        "경제 정책",
+        "재정정책",
+        "통화정책"
+      ],
+      "en": [
+        "exports",
+        "trade balance",
+        "tariff",
+        "fiscal policy"
+      ]
+    },
+    "금융·가계": {
+      "ko": [
+        "대출",
+        "신용대출",
+        "가계대출",
+        "은행",
+        "저축은행",
+        "인터넷은행",
+        "금융권"
+      ],
+      "en": [
+        "household debt",
+        "bank loan",
+        "consumer credit"
+      ]
+    }
+  }
+}

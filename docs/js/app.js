@@ -1,4 +1,5 @@
 const BOOKMARK_KEY = "newsclipping_saved_v1";
+const KEYWORDS_DRAFT_KEY = "newsclipping_keywords_draft_v1";
 
 const state = {
   economy: null,
@@ -8,6 +9,10 @@ const state = {
   business: { selectedCategory: null, source: "domestic" },
   economySelectedGroup: null,
   saved: { kindFilter: "all", subFilter: null },
+  keywords: null,
+  keywordsOriginal: null,
+  keywordsIsDraft: false,
+  keywordsView: { kind: "industry", selectedCategory: null },
 };
 
 const KIND_LABELS = { economy: "경제", industry: "산업군", business: "Business" };
@@ -338,14 +343,14 @@ function renderSaved() {
 
   // 대분류(경제/산업군/Business) 필터 칩
   const kindGrid = document.createElement("div");
-  kindGrid.className = "category-grid";
+  kindGrid.className = "kind-filter-grid";
   const kindCounts = { economy: 0, industry: 0, business: 0 };
   all.forEach((a) => {
     if (kindCounts[a.kind] !== undefined) kindCounts[a.kind] += 1;
   });
 
   const allBtn = document.createElement("button");
-  allBtn.className = "category-btn" + (s.kindFilter === "all" ? " active" : "");
+  allBtn.className = "kind-filter-btn" + (s.kindFilter === "all" ? " active" : "");
   allBtn.innerHTML = `전체 <span class="count">${all.length}</span>`;
   allBtn.addEventListener("click", () => {
     s.kindFilter = "all";
@@ -356,7 +361,7 @@ function renderSaved() {
 
   Object.entries(KIND_LABELS).forEach(([kind, label]) => {
     const btn = document.createElement("button");
-    btn.className = "category-btn" + (s.kindFilter === kind ? " active" : "");
+    btn.className = "kind-filter-btn" + (s.kindFilter === kind ? " active" : "");
     btn.innerHTML = `${escapeHtml(label)} <span class="count">${kindCounts[kind]}</span>`;
     btn.addEventListener("click", () => {
       s.kindFilter = kind;
@@ -369,7 +374,7 @@ function renderSaved() {
 
   let filtered = s.kindFilter === "all" ? all : all.filter((a) => a.kind === s.kindFilter);
 
-  // 하위 카테고리 필터 칩 (대분류를 선택했을 때만)
+  // 하위 카테고리 필터 칩 (대분류를 선택했을 때만) — 대분류와 다른 모양(알약형 칩)으로 구분
   if (s.kindFilter !== "all") {
     const subCounts = {};
     filtered.forEach((a) => {
@@ -377,7 +382,7 @@ function renderSaved() {
     });
 
     const subGrid = document.createElement("div");
-    subGrid.className = "category-grid";
+    subGrid.className = "category-grid sub-filter-grid";
 
     const subAllBtn = document.createElement("button");
     subAllBtn.className = "category-btn" + (!s.subFilter ? " active" : "");
@@ -421,6 +426,156 @@ function renderSaved() {
   });
 }
 
+// ---------- 키워드 설정 ----------
+
+function saveKeywordsDraft() {
+  state.keywordsIsDraft = true;
+  localStorage.setItem(KEYWORDS_DRAFT_KEY, JSON.stringify(state.keywords));
+}
+
+function downloadKeywordsJson() {
+  const blob = new Blob([JSON.stringify(state.keywords, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "keywords.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function renderKeywordEditor(kind, category, lang, label) {
+  const wrap = document.createElement("div");
+  wrap.className = "keyword-editor";
+
+  const words = state.keywords[kind][category][lang];
+
+  const chipRow = document.createElement("div");
+  chipRow.className = "keyword-chip-row";
+  words.forEach((word, i) => {
+    const chip = document.createElement("span");
+    chip.className = "keyword-chip";
+    chip.innerHTML = `${escapeHtml(word)} <button type="button" aria-label="삭제">×</button>`;
+    chip.querySelector("button").addEventListener("click", () => {
+      words.splice(i, 1);
+      saveKeywordsDraft();
+      renderKeywords();
+    });
+    chipRow.appendChild(chip);
+  });
+
+  const addForm = document.createElement("form");
+  addForm.className = "keyword-add-form";
+  addForm.innerHTML = `<input type="text" placeholder="새 키워드" /><button type="submit">+ 추가</button>`;
+  addForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = addForm.querySelector("input");
+    const value = input.value.trim();
+    if (value && !words.includes(value)) {
+      words.push(value);
+      saveKeywordsDraft();
+      renderKeywords();
+    }
+  });
+
+  wrap.innerHTML = `<div class="keyword-editor-label">${escapeHtml(label)}</div>`;
+  wrap.appendChild(chipRow);
+  wrap.appendChild(addForm);
+  return wrap;
+}
+
+function renderKeywords() {
+  const view = document.getElementById("view-keywords");
+  view.innerHTML = "";
+
+  const title = document.createElement("div");
+  title.className = "block-title";
+  title.textContent = "키워드 설정";
+  view.appendChild(title);
+
+  view.insertAdjacentHTML(
+    "beforeend",
+    `<p class="keywords-help">카테고리별 검색 키워드를 추가·삭제할 수 있습니다. 이 화면 편집은 실제 파이프라인에 자동 반영되지 않으니,
+    수정 후 <b>keywords.json 다운로드</b>로 파일을 받아 <code>docs/data/keywords.json</code>에 덮어쓰고 커밋·푸시하세요.</p>`
+  );
+
+  if (state.keywordsIsDraft) {
+    view.insertAdjacentHTML(
+      "beforeend",
+      `<p class="keywords-draft-notice">이 브라우저에 저장된 임시 편집 내용을 보여주는 중입니다.</p>`
+    );
+  }
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "keywords-toolbar";
+  const downloadBtn = document.createElement("button");
+  downloadBtn.className = "primary-btn";
+  downloadBtn.textContent = "⬇ keywords.json 다운로드";
+  downloadBtn.addEventListener("click", downloadKeywordsJson);
+  const resetBtn = document.createElement("button");
+  resetBtn.className = "ghost-btn";
+  resetBtn.textContent = "편집 내용 되돌리기";
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem(KEYWORDS_DRAFT_KEY);
+    state.keywords = JSON.parse(JSON.stringify(state.keywordsOriginal));
+    state.keywordsIsDraft = false;
+    renderKeywords();
+  });
+  toolbar.appendChild(downloadBtn);
+  toolbar.appendChild(resetBtn);
+  view.appendChild(toolbar);
+
+  const kindGrid = document.createElement("div");
+  kindGrid.className = "kind-filter-grid";
+  [
+    ["economy", "경제"],
+    ["industry", "산업군"],
+    ["business", "Business"],
+  ].forEach(([kind, label]) => {
+    const btn = document.createElement("button");
+    btn.className = "kind-filter-btn" + (state.keywordsView.kind === kind ? " active" : "");
+    btn.textContent = label;
+    btn.addEventListener("click", () => {
+      state.keywordsView.kind = kind;
+      state.keywordsView.selectedCategory = null;
+      renderKeywords();
+    });
+    kindGrid.appendChild(btn);
+  });
+  view.appendChild(kindGrid);
+
+  const kind = state.keywordsView.kind;
+  const categoryNames = Object.keys(state.keywords[kind]);
+
+  const catGrid = document.createElement("div");
+  catGrid.className = "category-grid";
+  categoryNames.forEach((name) => {
+    const btn = document.createElement("button");
+    btn.className = "category-btn" + (state.keywordsView.selectedCategory === name ? " active" : "");
+    btn.textContent = name;
+    btn.addEventListener("click", () => {
+      state.keywordsView.selectedCategory = name;
+      renderKeywords();
+    });
+    catGrid.appendChild(btn);
+  });
+  view.appendChild(catGrid);
+
+  const detail = document.createElement("div");
+  detail.className = "category-detail";
+  view.appendChild(detail);
+
+  const selected = state.keywordsView.selectedCategory;
+  if (!selected) {
+    detail.innerHTML = `<div class="empty-state">위에서 카테고리를 선택하면 키워드를 편집할 수 있습니다.</div>`;
+    return;
+  }
+
+  detail.appendChild(renderKeywordEditor(kind, selected, "ko", "국내 검색 키워드 (한국어)"));
+  detail.appendChild(renderKeywordEditor(kind, selected, "en", "글로벌 검색 키워드 (영어)"));
+}
+
 // ---------- Tabs ----------
 
 function switchTab(tab) {
@@ -432,6 +587,7 @@ function switchTab(tab) {
   if (tab === "industry") renderCategoryTab("industry");
   if (tab === "business") renderCategoryTab("business");
   if (tab === "saved") renderSaved();
+  if (tab === "keywords") renderKeywords();
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
@@ -441,14 +597,26 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 // ---------- Init ----------
 
 async function init() {
-  const [economy, domestic, global] = await Promise.all([
+  const [economy, domestic, global, keywords] = await Promise.all([
     fetch("data/economy.json").then((r) => r.json()),
     fetch("data/domestic.json").then((r) => r.json()),
     fetch("data/global.json").then((r) => r.json()),
+    fetch("data/keywords.json").then((r) => r.json()),
   ]);
   state.economy = economy;
   state.domestic = domestic;
   state.global = global;
+  state.keywordsOriginal = keywords;
+
+  let draft = null;
+  try {
+    draft = JSON.parse(localStorage.getItem(KEYWORDS_DRAFT_KEY));
+  } catch {
+    draft = null;
+  }
+  state.keywords = draft || JSON.parse(JSON.stringify(keywords));
+  state.keywordsIsDraft = Boolean(draft);
+
   document.getElementById("header-date").textContent = `${economy.date} 기준`;
   switchTab("economy");
 }

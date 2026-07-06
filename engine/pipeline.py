@@ -40,29 +40,19 @@ def _dedup(candidates: list[dict]) -> list[dict]:
 # ---------- 수집 ----------
 
 
+MIN_NAVER_RESULTS = 5  # 네이버(메인) 결과가 이 개수 미만이면 구글(보충)로 보완
+
+
 def _collect_domestic_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
-    """구글 뉴스(메인) + 네이버(보충)로 후보 기사를 모은다. 링크 리다이렉트 해제는 하지 않음(느림 — 최종 선택 후 처리)."""
+    """네이버(메인) + 구글 뉴스(보충)로 후보 기사를 모은다.
+
+    네이버는 원문 링크를 바로 주기 때문에 리다이렉트 해제가 필요 없어 훨씬 빠르다.
+    구글은 결과가 부족할 때만 보충 호출하며, 링크 리다이렉트 해제는 하지 않는다
+    (gnewsdecoder 왕복이 느려 최종 선택된 기사에 한해 나중에 처리).
+    """
     candidates = []
     for cat_name, keywords in keyword_map.items():
         for kw in keywords[:KEYWORDS_PER_CATEGORY]:
-            try:
-                g_articles = google_news.filter_last_24h(google_news.search_news(kw, resolve_links=False))
-            except Exception as exc:  # noqa: BLE001
-                print(f"[google_news] '{kw}' 검색 실패: {exc}")
-                g_articles = []
-
-            for a in g_articles:
-                candidates.append(
-                    {
-                        "title": a.title,
-                        "description": a.description,
-                        "url": a.link,
-                        "published_at": a.pub_date,
-                        "hint_category": cat_name,
-                        "raw_source": "google",
-                    }
-                )
-
             try:
                 n_articles = naver_news.filter_last_24h(naver_news.search_news(kw, max_results=20))
             except Exception as exc:  # noqa: BLE001
@@ -78,6 +68,27 @@ def _collect_domestic_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
                         "published_at": a.pub_date,
                         "hint_category": cat_name,
                         "raw_source": "naver",
+                    }
+                )
+
+            if len(n_articles) >= MIN_NAVER_RESULTS:
+                continue  # 네이버만으로 충분하면 느린 구글 보충 호출은 건너뜀
+
+            try:
+                g_articles = google_news.filter_last_24h(google_news.search_news(kw, resolve_links=False))
+            except Exception as exc:  # noqa: BLE001
+                print(f"[google_news] '{kw}' 검색 실패: {exc}")
+                g_articles = []
+
+            for a in g_articles:
+                candidates.append(
+                    {
+                        "title": a.title,
+                        "description": a.description,
+                        "url": a.link,
+                        "published_at": a.pub_date,
+                        "hint_category": cat_name,
+                        "raw_source": "google",
                     }
                 )
 

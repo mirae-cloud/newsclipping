@@ -8,8 +8,9 @@
   --color-accent-soft: #eaf0f7;
   --color-insight: #a85a1d;
   --color-insight-soft: #fbf1e5;
-  --font-serif: "Noto Serif KR", serif;
   --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+  /* 예전엔 Noto Serif KR을 썼으나 전부 Pretendard로 통일 (크기는 유지) */
+  --font-serif: var(--font-sans);
 }
 
 * {
@@ -192,6 +193,55 @@ main {
 
 .category-btn.active .count {
   color: rgba(255, 255, 255, 0.75);
+}
+
+/* 저장됨 탭 — 대분류 필터: 하위분류(알약형 category-btn)와 다른 각진 세그먼트 모양 */
+.kind-filter-grid {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.kind-filter-btn {
+  appearance: none;
+  border: none;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-soft);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--color-sub);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kind-filter-btn:last-child {
+  border-right: none;
+}
+
+.kind-filter-btn:hover {
+  color: var(--color-ink);
+}
+
+.kind-filter-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.kind-filter-btn .count {
+  color: inherit;
+  opacity: 0.65;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.sub-filter-grid {
+  margin-top: -6px;
 }
 
 /* Source toggle (국내/글로벌) */
@@ -378,9 +428,9 @@ main {
 }
 
 .indicator-title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  color: var(--color-sub);
+  color: var(--color-ink);
   margin-bottom: 10px;
 }
 
@@ -404,6 +454,7 @@ main {
   font-size: 18px;
   font-weight: 700;
   font-family: var(--font-serif);
+  white-space: nowrap;
 }
 
 .indicator-numbers .value.today {
@@ -419,6 +470,145 @@ main {
   font-size: 20px;
   font-weight: 700;
   margin: 8px 0 14px;
+}
+
+/* 키워드 설정 */
+.keywords-help {
+  font-size: 13.5px;
+  color: var(--color-sub);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.keywords-help code {
+  background: var(--color-bg-soft);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 12.5px;
+}
+
+.keywords-draft-notice {
+  font-size: 13px;
+  color: var(--color-insight);
+  background: var(--color-insight-soft);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 0 16px;
+}
+
+.keywords-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.primary-btn {
+  appearance: none;
+  border: none;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ghost-btn {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-sub);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ghost-btn:hover {
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.keyword-editor {
+  margin-bottom: 24px;
+}
+
+.keyword-editor-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-sub);
+  margin-bottom: 8px;
+}
+
+.keyword-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.keyword-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 5px 8px 5px 12px;
+}
+
+.keyword-chip button {
+  appearance: none;
+  border: none;
+  background: none;
+  color: var(--color-accent);
+  opacity: 0.6;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.keyword-chip button:hover {
+  opacity: 1;
+}
+
+.keyword-add-form {
+  display: flex;
+  gap: 8px;
+}
+
+.keyword-add-form input {
+  flex: 1;
+  max-width: 240px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+}
+
+.keyword-add-form button {
+  appearance: none;
+  border: 1px solid var(--color-accent);
+  background: none;
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.keyword-add-form button:hover {
+  background: var(--color-accent);
+  color: #fff;
 }
 
 @media (max-width: 600px) {
