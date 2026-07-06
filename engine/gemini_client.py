@@ -16,11 +16,14 @@ from pydantic import BaseModel
 from engine import config
 
 # 확인 필요: 무료 티어 최신 모델명은 자주 바뀜 — 구현 직전 가격/한도 페이지에서 재확인.
-# gemini-3.5-flash는 무료라고 알려졌지만 실측 결과 무료 티어 한도가 하루 20건뿐이라 이 파이프라인엔 부족함(2026-07 실측).
-# gemini-2.5-flash는 분당 10건/하루 1,500건으로 훨씬 넉넉해 이걸 기본값으로 사용.
-MODEL_NAME = "gemini-2.5-flash"
+# 기본 모델은 gemini-3.5-flash. 2026-07 실측 결과 이 프로젝트/키는 gemini-3.5-flash와
+# gemini-2.5-flash 둘 다 동일하게 "하루 20건" 한도에 걸렸다 — 모델별 차이가 아니라
+# 이 프로젝트가 결제 계정 미연결 등으로 계정 차원에서 제한된 것으로 추정(확인 필요).
+# 결제 계정 연결 여부를 Google AI Studio에서 확인 후 재테스트할 것.
+MODEL_NAME = "gemini-3.5-flash"
 
-# 무료 티어 gemini-2.5-flash 한도가 분당 10건이라(2026-07 실측), 여유를 두고 분당 8건으로 자체 제한.
+# 서버가 20건 안팎에서 막히는 것을 감안해 자체적으로도 호출 속도를 낮게 유지(분당 8건).
+# 계정 한도 문제가 해결되면 이 값을 올려도 됨.
 MAX_REQUESTS_PER_MINUTE = 8
 _recent_call_times: deque = deque()
 

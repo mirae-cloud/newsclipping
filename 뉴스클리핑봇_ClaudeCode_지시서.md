@@ -77,7 +77,11 @@
 - 뉴스 요약(제목 1줄 + bullet), 카테고리 분류, 인사이트 생성, 전체/영역별 헤드라인 추출에 사용.
 - Google AI Studio 무료 티어 사용 → 봇 운영비 $0. 신용카드 불필요.
 - SDK: 신형 `google-genai` (`pip install google-genai`). 구형 `google-generativeai`는 폐기 → 사용 금지.
-- 모델: **`gemini-2.5-flash`** 사용(2026-07 실제 키로 검증). 2026-04-01부로 Google AI Studio 무료 티어는 Flash·Flash-Lite 계열만 제공하지만, **`gemini-3.5-flash`는 이름과 달리 무료 티어 한도가 하루 20건뿐**이라 이 파이프라인(하루 60건 이상 호출)엔 부족함이 실측으로 확인됨. `gemini-2.5-flash`는 분당 10건·하루 1,500건으로 충분(계정/시기·지역에 따라 변동 가능하니 주기적 재확인 필요). 모델명은 상수/환경변수로 분리해 언제든 교체 가능하게 구현.
+- 모델: 기본값 **`gemini-3.5-flash`**. 2026-04-01부로 Google AI Studio 무료 티어는 Flash·Flash-Lite 계열만 제공.
+  **주의(중요, 확인 필요)**: 2026-07 실측 결과 이 프로젝트/키는 `gemini-3.5-flash`와 `gemini-2.5-flash` **둘 다 동일하게 하루 20건 한도**에 걸림 —
+  모델 선택의 문제가 아니라 **결제 계정 미연결 등 프로젝트 차원의 제한**일 가능성이 높다. 공개 문서상 Flash 계열은 하루 1,500건이 일반적이라고
+  알려져 있어 이 20건은 비정상적으로 낮음. 실제 사용 전 Google AI Studio에서 프로젝트 결제 상태·한도를 확인할 것.
+  모델명은 상수/환경변수로 분리해 언제든 교체 가능하게 구현.
 - 키: 환경변수 `GEMINI_API_KEY`로 주입(하드코딩 금지). 429(rate limit) 대비 **자체 분당 호출 수 제한(스로틀)** + 서버가 알려주는 retryDelay 우선 재시도 적용.
 - 문서/키: https://aistudio.google.com , https://ai.google.dev/gemini-api/docs/quickstart
 - 주의(데이터): 무료 티어는 프롬프트가 구글 제품 개선(학습)에 쓰일 수 있음(한국 사용자 해당). 공개 뉴스라 민감도는 낮음.
