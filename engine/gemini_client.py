@@ -128,11 +128,10 @@ class ClassificationResult(BaseModel):
     classifications: list[ArticleClassification]
 
 
-def classify_articles(articles: list[dict], allowed_categories: list[str]) -> dict[int, Optional[str]]:
-    """articles: [{"index": int, "title": str, "description": str}, ...]
+CLASSIFY_BATCH_SIZE = 40  # 한 번에 너무 많은 기사를 보내면 응답 JSON이 잘려 파싱 실패하므로 배치 분할
 
-    반환: {index: 카테고리명 또는 None}
-    """
+
+def _classify_batch(articles: list[dict], allowed_categories: list[str]) -> dict[int, Optional[str]]:
     articles_block = "\n".join(f'{a["index"]}. {a["title"]} — {a["description"][:200]}' for a in articles)
     categories_block = "\n".join(f"- {c}" for c in allowed_categories)
 
@@ -152,6 +151,18 @@ def classify_articles(articles: list[dict], allowed_categories: list[str]) -> di
 """
     result = _generate_json(prompt, ClassificationResult)
     return {c.index: c.category for c in result.classifications}
+
+
+def classify_articles(articles: list[dict], allowed_categories: list[str]) -> dict[int, Optional[str]]:
+    """articles: [{"index": int, "title": str, "description": str}, ...]
+
+    반환: {index: 카테고리명 또는 None}. 응답 JSON이 잘리는 것을 막기 위해 CLASSIFY_BATCH_SIZE 단위로 나눠 호출한다.
+    """
+    merged: dict[int, Optional[str]] = {}
+    for start in range(0, len(articles), CLASSIFY_BATCH_SIZE):
+        batch = articles[start : start + CLASSIFY_BATCH_SIZE]
+        merged.update(_classify_batch(batch, allowed_categories))
+    return merged
 
 
 class ArticleOutput(BaseModel):
