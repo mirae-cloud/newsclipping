@@ -11,7 +11,7 @@
   "title": "string — 뉴스 핵심 한 줄 요약",
   "url": "string — 원문 링크 (구글 리다이렉트 해제된 것)",
   "bullets": ["string", "string"],
-  "insight": "string — 파급효과 분석 문단. '추정'/'가능성' 문구가 포함되면 프론트에서 자동으로 뱃지 처리",
+  "insight": "string — 파급효과 분석 문단. '추정'/'가능성' 문구 포함 필수(5-2 규칙)이나 프론트에서 별도로 강조 표시하지는 않음",
   "published_at": "ISO 8601 datetime",
   "category": "string — 6/7번 산업군 또는 Business 카테고리명, 또는 8번 경제 키워드 그룹명"
 }

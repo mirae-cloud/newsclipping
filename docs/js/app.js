@@ -26,11 +26,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#39;");
 }
 
-function highlightInsight(text) {
-  const escaped = escapeHtml(text);
-  return escaped.replace(/(추정|가능성)/g, '<span class="badge-tag">$1</span>');
-}
-
 function timeAgo(isoString) {
   const diffMs = Date.now() - new Date(isoString).getTime();
   const hours = Math.max(0, Math.round(diffMs / 3600000));
@@ -86,7 +81,7 @@ function createArticleCard(article, meta) {
       </ul>
       <div class="insight-block">
         <span class="insight-label">INSIGHT</span>
-        ${highlightInsight(article.insight)}
+        ${escapeHtml(article.insight)}
       </div>
     </div>
   `;
@@ -133,20 +128,26 @@ const INDICATOR_META = [
   { key: "policy_rate", region: "us", label: "기준금리 — 미국", unit: "%" },
   { key: "cpi", region: "kr", label: "소비자물가(CPI) — 한국", unit: "" },
   { key: "cpi", region: "us", label: "소비자물가(CPI) — 미국", unit: "" },
-  { key: "fx_usd_krw", region: null, label: "환율 — 원/달러", unit: "원" },
+  { key: "fx_usd_krw", region: null, label: "환율 — 원/달러", unit: "원", wide: true },
 ];
+
+function formatIndicatorValue(value, key) {
+  if (value === null || value === undefined) return "-";
+  const decimals = key === "policy_rate" ? 2 : 0;
+  return Number(value).toFixed(decimals);
+}
 
 function renderIndicatorCard(container, meta) {
   const data = meta.region ? state.economy.indicators[meta.key][meta.region] : state.economy.indicators[meta.key];
 
   const card = document.createElement("div");
-  card.className = "indicator-card";
+  card.className = "indicator-card" + (meta.wide ? " wide" : "");
   card.innerHTML = `
     <div class="indicator-title">${meta.label}</div>
     <div class="indicator-numbers">
-      <div><div class="label">오늘</div><div class="value today">${data.latest}${meta.unit}</div></div>
-      <div><div class="label">1달 평균</div><div class="value">${data.avg_1m}${meta.unit}</div></div>
-      <div><div class="label">1년 평균</div><div class="value">${data.avg_1y}${meta.unit}</div></div>
+      <div><div class="label">오늘</div><div class="value today">${formatIndicatorValue(data.latest, meta.key)}${meta.unit}</div></div>
+      <div><div class="label">1달 평균</div><div class="value">${formatIndicatorValue(data.avg_1m, meta.key)}${meta.unit}</div></div>
+      <div><div class="label">1년 평균</div><div class="value">${formatIndicatorValue(data.avg_1y, meta.key)}${meta.unit}</div></div>
     </div>
     <div class="indicator-chart"><canvas></canvas></div>
   `;

@@ -4,7 +4,6 @@
 """
 
 import html
-import re
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -26,22 +25,13 @@ STYLE_INSIGHT = (
 )
 
 
-def _highlight_insight(text: str) -> str:
-    escaped = html.escape(text)
-    return re.sub(
-        r"(추정|가능성)",
-        r'<span style="background:#a85a1d;color:#fff;font-size:11px;font-weight:bold;padding:1px 5px;border-radius:4px;">\1</span>',
-        escaped,
-    )
-
-
 def _render_article(article: dict) -> str:
     bullets = "".join(f'<li style="{STYLE_BULLET}">{html.escape(b)}</li>' for b in article["bullets"])
     return f"""
     <div style="margin-bottom:16px;">
       <a href="{html.escape(article['url'])}" style="{STYLE_TITLE_LINK}">{html.escape(article['title'])}</a>
       <ul style="margin:4px 0 6px;padding-left:18px;">{bullets}</ul>
-      <div style="{STYLE_INSIGHT}">{_highlight_insight(article['insight'])}</div>
+      <div style="{STYLE_INSIGHT}">{html.escape(article['insight'])}</div>
     </div>
     """
 

@@ -294,13 +294,13 @@ def _build_economy_json() -> dict:
     for p in fx:
         p.date_str = _normalize_ecos_time(p.date_str, "D")
 
-    us_rate = fred.fetch_fedfunds()
+    us_rate = fred.fetch_policy_rate_us()
     us_cpi = fred.fetch_cpi_us()
 
     indicators = {
         "policy_rate": {
             "kr": _indicator_block_monthly(kr_rate),
-            "us": _indicator_block_monthly(us_rate),
+            "us": _indicator_block_daily(us_rate),  # DFEDTARU는 일단위로 발표되는 시리즈 (값은 FOMC 회의 때만 바뀜)
         },
         "cpi": {
             "kr": _indicator_block_monthly(kr_cpi),

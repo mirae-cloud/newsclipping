@@ -389,17 +389,6 @@ main {
   margin-bottom: 5px;
 }
 
-.badge-tag {
-  background: var(--color-insight);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
-  margin: 0 1px;
-  white-space: nowrap;
-}
-
 .extra-topics {
   margin-top: 10px;
   font-size: 13px;
@@ -416,45 +405,53 @@ main {
 /* Economy indicator cards */
 .indicator-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 40px;
 }
 
 .indicator-card {
   border: 1px solid var(--color-border);
-  border-radius: 10px;
-  padding: 16px 18px;
+  border-radius: 12px;
+  padding: 21px 23px;
+  min-width: 0; /* 그리드 자식이 내용 때문에 넘치지 않도록 */
+}
+
+.indicator-card.wide {
+  grid-column: span 2;
 }
 
 .indicator-title {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--color-ink);
-  margin-bottom: 10px;
+  margin-bottom: 13px;
 }
 
 .indicator-numbers {
   display: flex;
-  gap: 18px;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .indicator-numbers div {
   flex: 1;
+  min-width: 0;
 }
 
 .indicator-numbers .label {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--color-sub);
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 .indicator-numbers .value {
-  font-size: 18px;
+  font-size: 23px;
   font-weight: 700;
   font-family: var(--font-serif);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .indicator-numbers .value.today {
@@ -462,7 +459,16 @@ main {
 }
 
 .indicator-chart {
-  height: 90px;
+  height: 117px;
+}
+
+@media (max-width: 640px) {
+  .indicator-grid {
+    grid-template-columns: 1fr;
+  }
+  .indicator-card.wide {
+    grid-column: span 1;
+  }
 }
 
 .block-title {

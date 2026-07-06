@@ -1,7 +1,11 @@
-"""FRED API 클라이언트 — 미국 경제지표(기준금리 FEDFUNDS, CPI CPIAUCSL).
+"""FRED API 클라이언트 — 미국 경제지표(기준금리 목표상단 DFEDTARU, CPI CPIAUCSL).
 
 문서: https://fred.stlouisfed.org/docs/api/fred/series_observations.html
 무료, 120 req/분 한도.
+
+주의: 기준금리는 FEDFUNDS(실효 연방기금금리)가 아니라 DFEDTARU(FOMC 목표범위 상단)를 쓴다.
+FEDFUNDS는 목표범위 내에서 매일 변하는 시장 실효금리라 0.25%p 단위로 안 떨어지고,
+한국 기준금리(BOK 발표값)처럼 깔끔한 정책 발표값과 비교하려면 목표범위 값이 맞다(2026-07 확인).
 """
 
 from dataclasses import dataclass
@@ -14,7 +18,7 @@ from engine import config
 OBSERVATIONS_URL = "https://api.stlouisfed.org/fred/series/observations"
 REQUEST_TIMEOUT = 10
 
-FEDFUNDS_SERIES = "FEDFUNDS"
+POLICY_RATE_SERIES = "DFEDTARU"  # FOMC 목표범위 상단(Upper Limit)
 CPI_SERIES = "CPIAUCSL"
 
 
@@ -55,10 +59,10 @@ def fetch_series(series_id: str, start_date: str, end_date: str) -> list[FredPoi
     return points
 
 
-def fetch_fedfunds(years: int = 5) -> list[FredPoint]:
+def fetch_policy_rate_us(years: int = 5) -> list[FredPoint]:
     end = date.today()
     start = end - timedelta(days=365 * years)
-    return fetch_series(FEDFUNDS_SERIES, start.isoformat(), end.isoformat())
+    return fetch_series(POLICY_RATE_SERIES, start.isoformat(), end.isoformat())
 
 
 def fetch_cpi_us(years: int = 5) -> list[FredPoint]:
@@ -68,5 +72,5 @@ def fetch_cpi_us(years: int = 5) -> list[FredPoint]:
 
 
 if __name__ == "__main__":
-    print("최근 미국 기준금리:", fetch_fedfunds()[-3:])
+    print("최근 미국 기준금리(목표 상단):", fetch_policy_rate_us()[-3:])
     print("최근 미국 CPI:", fetch_cpi_us()[-3:])

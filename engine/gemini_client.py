@@ -16,10 +16,12 @@ from pydantic import BaseModel
 from engine import config
 
 # 확인 필요: 무료 티어 최신 모델명은 자주 바뀜 — 구현 직전 가격/한도 페이지에서 재확인.
-MODEL_NAME = "gemini-3.5-flash"
+# gemini-3.5-flash는 무료라고 알려졌지만 실측 결과 무료 티어 한도가 하루 20건뿐이라 이 파이프라인엔 부족함(2026-07 실측).
+# gemini-2.5-flash는 분당 10건/하루 1,500건으로 훨씬 넉넉해 이걸 기본값으로 사용.
+MODEL_NAME = "gemini-2.5-flash"
 
-# 무료 티어 gemini-3.5-flash 한도가 분당 20건이라(2026-07 실측), 여유를 두고 분당 15건으로 자체 제한.
-MAX_REQUESTS_PER_MINUTE = 15
+# 무료 티어 gemini-2.5-flash 한도가 분당 10건이라(2026-07 실측), 여유를 두고 분당 8건으로 자체 제한.
+MAX_REQUESTS_PER_MINUTE = 8
 _recent_call_times: deque = deque()
 
 MAX_RETRIES = 4
