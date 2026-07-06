@@ -29,7 +29,8 @@ def _parse_pub_date(raw: str) -> datetime:
     return datetime.strptime(raw, "%Y-%m-%d %H:%M:%S %z")
 
 
-def search_news(query: str, language: str = "en", page_size: int = 50) -> list[CurrentsArticle]:
+def search_news(query: str, language: str = "en", page_size: int = 20) -> list[CurrentsArticle]:
+    """page_size 상한: 무료 티어는 20까지."""
     if not config.CURRENTS_API_KEY:
         raise RuntimeError("CURRENTS_API_KEY가 설정되지 않았습니다 (.env 확인).")
 
@@ -39,8 +40,16 @@ def search_news(query: str, language: str = "en", page_size: int = 50) -> list[C
         "language": language,
         "page_size": page_size,
     }
-    response = requests.get(SEARCH_URL, params=params, timeout=REQUEST_TIMEOUT)
-    response.raise_for_status()
+    try:
+        response = requests.get(SEARCH_URL, params=params, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        # 쿼리 파라미터(apiKey)가 요청 URL에 포함되므로 원본 예외(URL 포함)는 노출하지 않되,
+        # 응답 본문은 키를 담지 않으므로 진단을 위해 함께 표시한다.
+        status = getattr(exc.response, "status_code", "unknown")
+        body = getattr(exc.response, "text", "")[:300]
+        raise RuntimeError(f"Currents API 요청 실패 (status={status}): {body}") from None
+
     payload = response.json()
 
     articles: list[CurrentsArticle] = []

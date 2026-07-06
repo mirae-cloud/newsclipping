@@ -35,8 +35,16 @@ def fetch_series(series_id: str, start_date: str, end_date: str) -> list[FredPoi
         "observation_start": start_date,
         "observation_end": end_date,
     }
-    response = requests.get(OBSERVATIONS_URL, params=params, timeout=REQUEST_TIMEOUT)
-    response.raise_for_status()
+    try:
+        response = requests.get(OBSERVATIONS_URL, params=params, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        # 쿼리 파라미터(api_key)가 요청 URL에 포함되므로 원본 예외(URL 포함)는 노출하지 않되,
+        # 응답 본문은 키를 담지 않으므로 진단을 위해 함께 표시한다.
+        status = getattr(exc.response, "status_code", "unknown")
+        body = getattr(exc.response, "text", "")[:300]
+        raise RuntimeError(f"FRED API 요청 실패 (status={status}): {body}") from None
+
     payload = response.json()
 
     points = []

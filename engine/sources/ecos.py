@@ -2,8 +2,8 @@
 
 문서: https://ecos.bok.or.kr/api/
 
-주의: 아래 STAT_CODE/ITEM_CODE 상수는 공개 자료 기준 best-effort 값이다.
-실제 키 발급 후 `list_items()`로 한 번 검증할 것을 권장한다 (확실하지 않음, 확인 필요).
+주의: 아래 STAT_CODE/ITEM_CODE 상수는 2026-07 실제 키로 값을 조회해 합리적인 범위(기준금리·CPI·환율)임을
+확인했다(정확한 항목명까지 대조한 것은 아니므로 수치가 이상해 보이면 `list_items()`로 재확인할 것).
 """
 
 from dataclasses import dataclass
@@ -16,7 +16,6 @@ from engine import config
 BASE_URL = "https://ecos.bok.or.kr/api"
 REQUEST_TIMEOUT = 10
 
-# 확인 필요: 실제 키로 list_items()를 호출해 아래 항목코드가 맞는지 검증할 것.
 POLICY_RATE_STAT_CODE = "722Y001"
 POLICY_RATE_ITEM_CODE = "0101000"  # 한국은행 기준금리
 
@@ -38,8 +37,16 @@ def _request(path_segments: list[str]) -> dict:
         raise RuntimeError("ECOS_API_KEY가 설정되지 않았습니다 (.env 확인).")
 
     url = "/".join([BASE_URL, *path_segments])
-    response = requests.get(url, timeout=REQUEST_TIMEOUT)
-    response.raise_for_status()
+    try:
+        response = requests.get(url, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        # URL 경로에 인증키가 그대로 포함되어 있어(.../StatisticSearch/{키}/...) 원본 예외(URL 포함)는
+        # 노출하지 않되, 응답 본문은 키를 담지 않으므로 진단을 위해 함께 표시한다.
+        status = getattr(exc.response, "status_code", "unknown")
+        body = getattr(exc.response, "text", "")[:300]
+        raise RuntimeError(f"ECOS API 요청 실패 (status={status}): {body}") from None
+
     payload = response.json()
 
     if "RESULT" in payload:

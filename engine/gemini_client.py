@@ -8,6 +8,7 @@ import time
 from typing import Optional
 
 from google import genai
+from google.genai import types
 from pydantic import BaseModel
 
 from engine import config
@@ -37,16 +38,17 @@ def _generate_json(prompt: str, schema: type[BaseModel]) -> BaseModel:
 
     for attempt in range(MAX_RETRIES):
         try:
-            interaction = client.interactions.create(
+            response = client.models.generate_content(
                 model=MODEL_NAME,
-                input=prompt,
-                response_format={
-                    "type": "text",
-                    "mime_type": "application/json",
-                    "schema": schema.model_json_schema(),
-                },
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=schema,
+                ),
             )
-            return schema.model_validate_json(interaction.output_text)
+            if response.parsed is not None:
+                return response.parsed
+            return schema.model_validate_json(response.text)
         except Exception as exc:  # noqa: BLE001 — SDK 예외 타입이 rate-limit별로 세분화되어 있지 않음
             last_error = exc
             if attempt < MAX_RETRIES - 1:
