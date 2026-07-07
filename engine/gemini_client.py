@@ -188,22 +188,28 @@ def _classify_batch(articles: list[dict], allowed_categories: list[str]) -> dict
     return {c.index: c.category for c in result.classifications}
 
 
-def classify_articles(articles: list[dict], allowed_categories: list[str]) -> dict[int, Optional[str]]:
+def classify_articles(articles: list[dict], allowed_categories: list[str]) -> tuple[dict[int, Optional[str]], bool]:
     """articles: [{"index": int, "title": str, "description": str}, ...]
 
-    반환: {index: 카테고리명 또는 None}. 응답 JSON이 잘리는 것을 막기 위해 CLASSIFY_BATCH_SIZE 단위로 나누고,
-    배치끼리는 서로 독립적이므로 동시에 호출해 전체 실행 시간을 줄인다.
+    반환: ({index: 카테고리명 또는 None}, 일부 배치라도 실패했는지 여부). 응답 JSON이 잘리는 것을 막기 위해
+    CLASSIFY_BATCH_SIZE 단위로 나누고, 배치끼리는 서로 독립적이므로 동시에 호출한다.
+    배치 하나가 실패해도(예: 일시적 503) 나머지 배치의 결과는 버리지 않고 최대한 살린다.
     """
     batches = [articles[i : i + CLASSIFY_BATCH_SIZE] for i in range(0, len(articles), CLASSIFY_BATCH_SIZE)]
     if not batches:
-        return {}
+        return {}, False
 
     merged: dict[int, Optional[str]] = {}
+    any_failed = False
     with ThreadPoolExecutor(max_workers=PARALLEL_WORKERS) as executor:
         futures = [executor.submit(_classify_batch, batch, allowed_categories) for batch in batches]
         for future in as_completed(futures):
-            merged.update(future.result())
-    return merged
+            try:
+                merged.update(future.result())
+            except Exception as exc:  # noqa: BLE001
+                print(f"[gemini] 분류 배치 실패: {exc}")
+                any_failed = True
+    return merged, any_failed
 
 
 class ArticleOutput(BaseModel):

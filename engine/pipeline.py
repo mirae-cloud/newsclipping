@@ -20,6 +20,10 @@ from engine.sources import currents_news, ecos, fred, google_news, naver_news
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "docs" / "data"
 
+# 실행 중 Gemini 요약이 실패한(503 등 일시적 오류) 카테고리 목록을 기록해두는 파일.
+# docs/ 는 GitHub Pages로 공개 서빙되므로, 내부 상태 파일은 그 바깥(저장소 루트)에 둔다.
+FAILED_CATEGORIES_PATH = ROOT / ".failed_categories.json"
+
 CATEGORY_WORKERS = 10  # 카테고리별 요약(Gemini 호출)을 동시에 처리할 스레드 수
 # 구글 링크 해제는 반복 호출 시 구글 쪽에서 느려지는 경향이 관찰되어 낮은 동시 실행 수 유지
 LINK_RESOLVE_WORKERS = 5
@@ -130,39 +134,51 @@ def _collect_global_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
 # ---------- 분류 + 카테고리별 요약 ----------
 
 
-def _classify_and_group(candidates: list[dict], allowed_categories: list[str]) -> dict[str, list[dict]]:
+def _classify_and_group(candidates: list[dict], allowed_categories: list[str]) -> tuple[dict[str, list[dict]], bool]:
+    """반환: (카테고리별 후보 목록, 분류가 일부라도 실패했는지 여부).
+
+    분류가 실패한 카테고리는 후보가 0개로 남는데, 이는 '분류 실패로 못 채움'과 '원래 관련 기사가 없음'을
+    구분할 수 없으므로, 호출부에서 classify_failed=True일 때 빈 카테고리를 재시도 대상에 포함시켜야 한다.
+    """
     grouped: dict[str, list[dict]] = {c: [] for c in allowed_categories}
     if not candidates:
-        return grouped
+        return grouped, False
 
     indexed = [{"index": i, "title": c["title"], "description": c["description"]} for i, c in enumerate(candidates)]
     try:
-        assignments = gemini_client.classify_articles(indexed, allowed_categories)
+        assignments, classify_failed = gemini_client.classify_articles(indexed, allowed_categories)
     except Exception as exc:  # noqa: BLE001
         print(f"[gemini] 분류 실패: {exc}")
-        return grouped
+        return grouped, True
 
     for i, candidate in enumerate(candidates):
         category = assignments.get(i)
         if category and category in grouped:
             grouped[category].append(candidate)
 
-    return grouped
+    return grouped, classify_failed
 
 
-def _build_category_block(category_name: str, cat_candidates: list[dict]) -> dict:
+def _empty_block() -> dict:
+    return {"sub_summary_bullets": [], "articles": [], "extra_topics": []}
+
+
+def _build_category_block(category_name: str, cat_candidates: list[dict]) -> tuple[dict, bool]:
     """Gemini 요약만 수행하고 링크 해제는 하지 않는다 — 구글 리다이렉트 해제는 느려서(기사당 수초~수십초)
     전체를 모은 뒤 _finalize_articles()에서 한꺼번에 병렬로 처리한다. articles의 url/id는 그때 확정된다.
+
+    반환: (block, success). candidates가 애초에 없어서 빈 것과, Gemini 호출 자체가 실패해서 빈 것을 구분한다
+    (후자만 '실패'로 기록해 나중에 --retry-failed로 재시도할 수 있게 한다).
     """
     if not cat_candidates:
-        return {"sub_summary_bullets": [], "articles": [], "extra_topics": []}
+        return _empty_block(), True
 
     indexed = [{"index": i, "title": c["title"], "description": c["description"]} for i, c in enumerate(cat_candidates)]
     try:
         summary = gemini_client.summarize_category(category_name, indexed)
     except Exception as exc:  # noqa: BLE001
         print(f"[gemini] '{category_name}' 요약 실패: {exc}")
-        return {"sub_summary_bullets": [], "articles": [], "extra_topics": []}
+        return _empty_block(), False
 
     articles = []
     for sel in summary.selected:
@@ -185,22 +201,28 @@ def _build_category_block(category_name: str, cat_candidates: list[dict]) -> dic
         "sub_summary_bullets": summary.sub_summary_bullets,
         "articles": articles,
         "extra_topics": summary.extra_topics,
-    }
+    }, True
 
 
-def _build_category_blocks_parallel(names: list[str], grouped: dict[str, list[dict]]) -> dict[str, dict]:
-    """카테고리별 Gemini 요약은 서로 독립적이므로 동시에 호출해 실행 시간을 줄인다."""
+def _build_category_blocks_parallel(names: list[str], grouped: dict[str, list[dict]]) -> tuple[dict[str, dict], list[str]]:
+    """카테고리별 Gemini 요약은 서로 독립적이므로 동시에 호출해 실행 시간을 줄인다.
+
+    반환: (블록 딕셔너리, 실패한 카테고리명 목록).
+    """
     blocks: dict[str, dict] = {}
+    failed: list[str] = []
     with ThreadPoolExecutor(max_workers=CATEGORY_WORKERS) as executor:
         future_map = {executor.submit(_build_category_block, name, grouped[name]): name for name in names}
         for future in as_completed(future_map):
             name = future_map[future]
             try:
-                blocks[name] = future.result()
+                blocks[name], success = future.result()
             except Exception as exc:  # noqa: BLE001
                 print(f"[gemini] '{name}' 요약 스레드 실패: {exc}")
-                blocks[name] = {"sub_summary_bullets": [], "articles": [], "extra_topics": []}
-    return blocks
+                blocks[name], success = _empty_block(), False
+            if not success:
+                failed.append(name)
+    return blocks, failed
 
 
 def _finalize_articles(category_blocks: dict[str, dict]) -> None:
@@ -245,16 +267,27 @@ def _build_overall_summary(category_blocks: dict[str, dict]) -> dict:
     }
 
 
-def _build_source_json(source: str) -> dict:
+def _mark_classify_failures(classify_failed: bool, allowed: list[str], blocks: dict[str, dict], failed: list[str]) -> list[str]:
+    """분류 단계 자체가 실패하면 그 여파로 후보 0개가 된 카테고리도 재시도 대상에 포함시킨다
+    ('분류 실패로 못 채움'과 '원래 관련 기사가 없음'을 구분할 수 없어 안전하게 재시도 대상에 넣는다)."""
+    if classify_failed:
+        for name in allowed:
+            if not blocks[name]["articles"] and name not in failed:
+                failed.append(name)
+    return failed
+
+
+def _build_source_json(source: str) -> tuple[dict, list[str]]:
     if source == "domestic":
         raw = _collect_domestic_raw({**categories.INDUSTRY_KEYWORDS, **categories.BUSINESS_KEYWORDS})
     else:
         raw = _collect_global_raw({**categories.INDUSTRY_KEYWORDS_EN, **categories.BUSINESS_KEYWORDS_EN})
 
     allowed = categories.INDUSTRY_CATEGORIES + categories.BUSINESS_CATEGORIES
-    grouped = _classify_and_group(raw, allowed)
+    grouped, classify_failed = _classify_and_group(raw, allowed)
 
-    category_blocks = _build_category_blocks_parallel(allowed, grouped)
+    category_blocks, failed = _build_category_blocks_parallel(allowed, grouped)
+    failed = _mark_classify_failures(classify_failed, allowed, category_blocks, failed)
     _finalize_articles(category_blocks)
 
     industry_json = {name: category_blocks[name] for name in categories.INDUSTRY_CATEGORIES}
@@ -262,26 +295,28 @@ def _build_source_json(source: str) -> dict:
 
     summary_json = _build_overall_summary({**industry_json, **business_json})
 
-    return {
+    result = {
         "date": date.today().isoformat(),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary_json,
         "categories": {"industry": industry_json, "business": business_json},
     }
+    return result, failed
 
 
-def _build_economy_news_json() -> dict:
+def _build_economy_news_json() -> tuple[dict, list[str]]:
     raw = _collect_domestic_raw(categories.ECONOMY_KEYWORDS) + _collect_global_raw(categories.ECONOMY_KEYWORDS_EN)
     raw = _dedup(raw)
 
     allowed = categories.ECONOMY_KEYWORD_GROUPS
-    grouped = _classify_and_group(raw, allowed)
+    grouped, classify_failed = _classify_and_group(raw, allowed)
 
-    keyword_groups_json = _build_category_blocks_parallel(allowed, grouped)
+    keyword_groups_json, failed = _build_category_blocks_parallel(allowed, grouped)
+    failed = _mark_classify_failures(classify_failed, allowed, keyword_groups_json, failed)
     _finalize_articles(keyword_groups_json)
     summary_json = _build_overall_summary(keyword_groups_json)
 
-    return {"summary": summary_json, "keyword_groups": keyword_groups_json}
+    return {"summary": summary_json, "keyword_groups": keyword_groups_json}, failed
 
 
 # ---------- 경제지표 ----------
@@ -323,7 +358,7 @@ def _normalize_ecos_time(time_str: str, cycle: str) -> str:
     return time_str
 
 
-def _build_economy_json() -> dict:
+def _build_economy_json() -> tuple[dict, list[str]]:
     kr_rate = ecos.fetch_policy_rate_kr()
     for p in kr_rate:
         p.date_str = _normalize_ecos_time(p.date_str, "M")
@@ -351,12 +386,96 @@ def _build_economy_json() -> dict:
         "fx_usd_krw": _indicator_block_daily(fx),
     }
 
-    return {
+    news_json, failed = _build_economy_news_json()
+    result = {
         "date": date.today().isoformat(),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "indicators": indicators,
-        "news": _build_economy_news_json(),
+        "news": news_json,
     }
+    return result, failed
+
+
+# ---------- 실패 카테고리 재시도 ----------
+
+
+def _category_kind(name: str) -> str:
+    return "industry" if name in categories.INDUSTRY_CATEGORIES else "business"
+
+
+def _save_failed_categories(failures: dict[str, list[str]]) -> None:
+    non_empty = {k: v for k, v in failures.items() if v}
+    if non_empty:
+        FAILED_CATEGORIES_PATH.write_text(json.dumps(failures, ensure_ascii=False, indent=2), encoding="utf-8")
+        total = sum(len(v) for v in failures.values())
+        print(f"[retry] 실패한 카테고리 {total}개를 {FAILED_CATEGORIES_PATH.name}에 기록함 — "
+              f"나중에 'python -m engine.pipeline --retry-failed'로 재시도 가능.")
+    elif FAILED_CATEGORIES_PATH.exists():
+        FAILED_CATEGORIES_PATH.unlink()
+
+
+def _retry_source_categories(source: str, names: list[str]) -> list[str]:
+    """source(economy/domestic/global)에서 실패했던 카테고리 names만 재수집·재분류·재요약해서
+    기존 docs/data/{source}.json에 해당 카테고리만 병합한다. 여전히 실패한 카테고리명을 반환한다.
+    """
+    json_path = DATA_DIR / f"{source}.json"
+    if not json_path.exists():
+        print(f"[retry] {json_path.name}가 없어 재시도할 수 없습니다. 전체 파이프라인을 먼저 실행하세요.")
+        return names
+
+    existing = json.loads(json_path.read_text(encoding="utf-8"))
+
+    if source == "economy":
+        kr_map = {n: categories.ECONOMY_KEYWORDS[n] for n in names}
+        en_map = {n: categories.ECONOMY_KEYWORDS_EN[n] for n in names}
+        raw = _dedup(_collect_domestic_raw(kr_map) + _collect_global_raw(en_map))
+        grouped, classify_failed = _classify_and_group(raw, names)
+        blocks, failed = _build_category_blocks_parallel(names, grouped)
+        failed = _mark_classify_failures(classify_failed, names, blocks, failed)
+        _finalize_articles(blocks)
+        for name in names:
+            existing["news"]["keyword_groups"][name] = blocks[name]
+    else:
+        industry_kw = categories.INDUSTRY_KEYWORDS if source == "domestic" else categories.INDUSTRY_KEYWORDS_EN
+        business_kw = categories.BUSINESS_KEYWORDS if source == "domestic" else categories.BUSINESS_KEYWORDS_EN
+        keyword_map = {n: (industry_kw.get(n) or business_kw.get(n)) for n in names}
+        collect_fn = _collect_domestic_raw if source == "domestic" else _collect_global_raw
+        raw = collect_fn(keyword_map)
+        grouped, classify_failed = _classify_and_group(raw, names)
+        blocks, failed = _build_category_blocks_parallel(names, grouped)
+        failed = _mark_classify_failures(classify_failed, names, blocks, failed)
+        _finalize_articles(blocks)
+        for name in names:
+            existing["categories"][_category_kind(name)][name] = blocks[name]
+
+    json_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[retry] {source}: {len(names) - len(failed)}/{len(names)}개 성공 — {json_path.name}에 반영함.")
+    return failed
+
+
+def retry_failed():
+    """직전 실행에서 실패한 카테고리만 다시 수집·분류·요약해 기존 JSON에 채워 넣는다.
+
+    실행: python -m engine.pipeline --retry-failed
+    전체 요약(overall summary)은 다시 계산하지 않는다 — 실패했던 개별 카테고리만 채우는 용도.
+    """
+    sys.stdout.reconfigure(line_buffering=True)
+
+    if not FAILED_CATEGORIES_PATH.exists():
+        print("재시도할 실패 카테고리 기록이 없습니다.")
+        return
+
+    failures = json.loads(FAILED_CATEGORIES_PATH.read_text(encoding="utf-8"))
+    still_failed: dict[str, list[str]] = {}
+    for source in ["economy", "domestic", "global"]:
+        names = failures.get(source, [])
+        if not names:
+            continue
+        print(f"[retry] {source}: {names}")
+        still_failed[source] = _retry_source_categories(source, names)
+
+    _save_failed_categories(still_failed)
+    print("재시도 완료.")
 
 
 def main():
@@ -366,17 +485,17 @@ def main():
 
     print("[1/3] 경제지표·경제 뉴스 수집 중...")
     t0 = time.monotonic()
-    economy_json = _build_economy_json()
+    economy_json, economy_failed = _build_economy_json()
     print(f"  -> {time.monotonic() - t0:.1f}초")
 
     print("[2/3] 국내 뉴스 수집 중...")
     t0 = time.monotonic()
-    domestic_json = _build_source_json("domestic")
+    domestic_json, domestic_failed = _build_source_json("domestic")
     print(f"  -> {time.monotonic() - t0:.1f}초")
 
     print("[3/3] 글로벌 뉴스 수집 중...")
     t0 = time.monotonic()
-    global_json = _build_source_json("global")
+    global_json, global_failed = _build_source_json("global")
     print(f"  -> {time.monotonic() - t0:.1f}초")
 
     (DATA_DIR / "economy.json").write_text(json.dumps(economy_json, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -384,6 +503,8 @@ def main():
     (DATA_DIR / "global.json").write_text(json.dumps(global_json, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"완료 — {DATA_DIR} 에 저장됨.")
+
+    _save_failed_categories({"economy": economy_failed, "domestic": domestic_failed, "global": global_failed})
 
     print("이메일 발송 중...")
     try:
@@ -417,4 +538,7 @@ def _print_usage_summary():
 
 
 if __name__ == "__main__":
-    main()
+    if "--retry-failed" in sys.argv:
+        retry_failed()
+    else:
+        main()
