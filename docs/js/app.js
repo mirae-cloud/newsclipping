@@ -179,7 +179,7 @@ function renderIndicatorCard(container, meta) {
   });
 }
 
-function renderEconomyGroupButtons(container, groups) {
+function renderEconomyGroupButtons(container, groups, onSelect) {
   const grid = document.createElement("div");
   grid.className = "category-grid";
   Object.entries(groups).forEach(([name, block]) => {
@@ -188,14 +188,28 @@ function renderEconomyGroupButtons(container, groups) {
     btn.innerHTML = `${escapeHtml(name)} <span class="count">${block.articles.length}</span>`;
     btn.addEventListener("click", () => {
       state.economySelectedGroup = name;
-      renderEconomy();
+      grid.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      onSelect();
     });
     grid.appendChild(btn);
   });
   container.appendChild(grid);
 }
 
+function renderEconomyDetail(detailEl, groups) {
+  detailEl.innerHTML = "";
+  if (!state.economySelectedGroup) {
+    detailEl.innerHTML = `<div class="empty-state">위에서 키워드 그룹을 선택하면 관련 뉴스가 표시됩니다.</div>`;
+    return;
+  }
+  const block = groups[state.economySelectedGroup];
+  renderCategoryDetail(detailEl, block, { categoryLabel: state.economySelectedGroup, kind: "economy" });
+}
+
 function renderEconomy() {
+  // 탭 진입 시 한 번만 전체를 그린다. 키워드 그룹 클릭은 detail 영역만 갱신해서
+  // (1) 차트를 매번 다시 그리지 않고 (2) 그 여파로 페이지가 맨 위로 튀는 것도 막는다.
   const view = document.getElementById("view-economy");
   view.innerHTML = "";
 
@@ -218,19 +232,13 @@ function renderEconomy() {
 
   view.insertAdjacentHTML("beforeend", renderSummaryBox(economy.news.summary));
 
-  renderEconomyGroupButtons(view, economy.news.keyword_groups);
-
   const detail = document.createElement("div");
   detail.className = "category-detail";
+
+  renderEconomyGroupButtons(view, economy.news.keyword_groups, () => renderEconomyDetail(detail, economy.news.keyword_groups));
+
   view.appendChild(detail);
-
-  if (!state.economySelectedGroup) {
-    detail.innerHTML = `<div class="empty-state">위에서 키워드 그룹을 선택하면 관련 뉴스가 표시됩니다.</div>`;
-    return;
-  }
-
-  const block = economy.news.keyword_groups[state.economySelectedGroup];
-  renderCategoryDetail(detail, block, { categoryLabel: state.economySelectedGroup, kind: "economy" });
+  renderEconomyDetail(detail, economy.news.keyword_groups);
 }
 
 // ---------- Industry / Business tabs ----------
@@ -273,6 +281,21 @@ function renderCategoryTab(kind) {
   title.textContent = kind === "industry" ? "산업군" : "Business";
   view.appendChild(title);
 
+  // 국내/글로벌 토글을 요약 박스보다 위, 제목 바로 아래에 항상 표시 (탐색 중 위치가 바뀌지 않도록)
+  const toggle = document.createElement("div");
+  toggle.className = "source-toggle";
+  toggle.innerHTML = `
+    <button data-src="domestic" class="${s.source === "domestic" ? "active" : ""}">국내</button>
+    <button data-src="global" class="${s.source === "global" ? "active" : ""}">글로벌</button>
+  `;
+  toggle.querySelectorAll("button").forEach((b) => {
+    b.addEventListener("click", () => {
+      s.source = b.dataset.src;
+      renderCategoryTab(kind);
+    });
+  });
+  view.appendChild(toggle);
+
   view.insertAdjacentHTML("beforeend", renderSummaryBox(dataset.summary[kind]));
 
   const grid = document.createElement("div");
@@ -299,22 +322,7 @@ function renderCategoryTab(kind) {
     return;
   }
 
-  const toggle = document.createElement("div");
-  toggle.className = "source-toggle";
-  toggle.innerHTML = `
-    <button data-src="domestic" class="${s.source === "domestic" ? "active" : ""}">국내</button>
-    <button data-src="global" class="${s.source === "global" ? "active" : ""}">글로벌</button>
-  `;
-  toggle.querySelectorAll("button").forEach((b) => {
-    b.addEventListener("click", () => {
-      s.source = b.dataset.src;
-      renderCategoryTab(kind);
-    });
-  });
-  detail.appendChild(toggle);
-
-  const currentDataset = state[s.source];
-  const block = currentDataset.categories[kind][s.selectedCategory];
+  const block = categories[s.selectedCategory];
   const sourceLabel = s.source === "domestic" ? "국내" : "글로벌";
   renderCategoryDetail(detail, block, { categoryLabel: s.selectedCategory, sourceLabel, kind });
 }

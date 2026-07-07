@@ -42,7 +42,7 @@ BUSINESS_CATEGORIES = [
     "Artificial Intelligence",
 ]
 
-ECONOMY_KEYWORD_GROUPS = ["통화·금리", "물가·환율", "성장·경기", "주식·투자", "무역·정책", "금융·가계"]
+ECONOMY_KEYWORD_GROUPS = ["통화 & 금리", "물가 & 환율", "성장 & 경기", "주식 & 투자", "무역 & 정책", "금융 & 가계"]
 
 # 제목/설명에 이 단어가 포함된 기사는 수집 단계에서 제외한다 (오피니언·칼럼·사설·블로그류 배제).
 EXCLUDE_KEYWORDS = ["오피니언", "칼럼", "사설", "블로그", "Opinion", "Column", "Editorial", "Blog"]
