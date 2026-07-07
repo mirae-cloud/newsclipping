@@ -273,7 +273,7 @@ function renderCategoryTab(kind) {
   title.textContent = kind === "industry" ? "산업군" : "Business";
   view.appendChild(title);
 
-  view.insertAdjacentHTML("beforeend", renderSummaryBox(dataset.summary));
+  view.insertAdjacentHTML("beforeend", renderSummaryBox(dataset.summary[kind]));
 
   const grid = document.createElement("div");
   grid.className = "category-grid";
@@ -597,12 +597,18 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 
 // ---------- Init ----------
 
+function fetchFresh(path) {
+  // GitHub Pages/브라우저 캐시 때문에 새로고침해도 옛날 데이터가 보이는 걸 막기 위해
+  // 매번 다른 URL로 취급되도록 타임스탬프를 붙이고, 캐시 자체를 쓰지 않도록 지정한다.
+  return fetch(`${path}?t=${Date.now()}`, { cache: "no-store" }).then((r) => r.json());
+}
+
 async function init() {
   const [economy, domestic, global, keywords] = await Promise.all([
-    fetch("data/economy.json").then((r) => r.json()),
-    fetch("data/domestic.json").then((r) => r.json()),
-    fetch("data/global.json").then((r) => r.json()),
-    fetch("data/keywords.json").then((r) => r.json()),
+    fetchFresh("data/economy.json"),
+    fetchFresh("data/domestic.json"),
+    fetchFresh("data/global.json"),
+    fetchFresh("data/keywords.json"),
   ]);
   state.economy = economy;
   state.domestic = domestic;

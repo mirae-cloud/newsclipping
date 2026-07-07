@@ -9,12 +9,12 @@ import json
 from pathlib import Path
 
 INDUSTRY_CATEGORIES = [
-    "Finance (금융)",
-    "TMT (기술·미디어·통신)",
-    "Robotics & Semiconductors",
+    "금융",
+    "TMT (기술 & 미디어 & 통신)",
+    "로봇 & 반도체",
     "헬스케어 & 라이프사이언스",
     "소비재 & 리테일 (B2C)",
-    "여행 (Travel)",
+    "여행 & 항공",
     "자동차 & 모빌리티",
     "산업재 (Industrial Goods)",
     "항공 & 방산",
@@ -22,9 +22,9 @@ INDUSTRY_CATEGORIES = [
     "건설 & 인프라",
     "부동산",
     "소재 & 화학",
-    "Oil & Gas",
+    "석유 & 가스",
     "에너지 & 전력",
-    "공공·사회·교육",
+    "공공 & 사회 & 교육",
 ]
 
 BUSINESS_CATEGORIES = [
@@ -43,6 +43,9 @@ BUSINESS_CATEGORIES = [
 
 ECONOMY_KEYWORD_GROUPS = ["통화·금리", "물가·환율", "성장·경기", "주식·투자", "무역·정책", "금융·가계"]
 
+# 제목/설명에 이 단어가 포함된 기사는 수집 단계에서 제외한다 (오피니언·칼럼·사설류 배제).
+EXCLUDE_KEYWORDS = ["오피니언", "칼럼", "사설"]
+
 _KEYWORDS_PATH = Path(__file__).resolve().parent.parent / "docs" / "data" / "keywords.json"
 
 
@@ -55,6 +58,12 @@ def _split_ko_en(section: dict) -> tuple[dict, dict]:
     ko = {name: entry.get("ko", []) for name, entry in section.items()}
     en = {name: entry.get("en", []) for name, entry in section.items()}
     return ko, en
+
+
+def is_excluded(*texts: str) -> bool:
+    """제목/설명 등에 EXCLUDE_KEYWORDS 중 하나라도 포함되어 있으면 True (대소문자 무시)."""
+    combined = " ".join(t for t in texts if t).lower()
+    return any(kw.lower() in combined for kw in EXCLUDE_KEYWORDS)
 
 
 _KEYWORDS = _load_keyword_sets()

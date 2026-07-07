@@ -22,12 +22,12 @@ TODAY = date.today()
 NOW_ISO = datetime.now(timezone.utc).isoformat()
 
 INDUSTRY_CATEGORIES = [
-    "Finance (금융)",
-    "TMT (기술·미디어·통신)",
-    "Robotics & Semiconductors",
+    "금융",
+    "TMT (기술 & 미디어 & 통신)",
+    "로봇 & 반도체",
     "헬스케어 & 라이프사이언스",
     "소비재 & 리테일 (B2C)",
-    "여행 (Travel)",
+    "여행 & 항공",
     "자동차 & 모빌리티",
     "산업재 (Industrial Goods)",
     "항공 & 방산",
@@ -35,9 +35,9 @@ INDUSTRY_CATEGORIES = [
     "건설 & 인프라",
     "부동산",
     "소재 & 화학",
-    "Oil & Gas",
+    "석유 & 가스",
     "에너지 & 전력",
-    "공공·사회·교육",
+    "공공 & 사회 & 교육",
 ]
 
 BUSINESS_CATEGORIES = [
@@ -89,7 +89,7 @@ def build_domestic() -> dict:
     industry = {name: empty_block() for name in INDUSTRY_CATEGORIES}
     business = {name: empty_block() for name in BUSINESS_CATEGORIES}
 
-    industry["Robotics & Semiconductors"] = category_block(
+    industry["로봇 & 반도체"] = category_block(
         [
             "국내 메모리 3사가 평택·이천 라인 증설에 나서며 HBM4 양산 경쟁이 본격화되고 있고, OO전자는 내년 매출 비중 30%를 목표로 내걸었다.",
             "파운드리 가동률이 두 분기 연속 상승했는데, 레거시 공정 중심의 수주 회복과 고객사 재고 조정 마무리가 맞물린 결과로 풀이된다.",
@@ -101,7 +101,7 @@ def build_domestic() -> dict:
                 "메모리 업황 개선은 후방산업인 반도체 장비·소재(증착·식각 장비, 특수가스) 수요 회복으로 이어질 가능성이 있다. "
                 "전방산업인 서버·데이터센터 업체 입장에서는 원가 부담이 이어질 수 있어 AI 인프라 투자 속도에 제약 요인이 될 수 있다는 추정도 나온다. "
                 "일견 무관해 보이지만, 메모리 가격 상승은 PC·스마트폰 교체 수요를 늦추는 대체효과로 소비재·리테일 업계 단가 정책에도 간접 영향을 줄 가능성이 있다.",
-                "Robotics & Semiconductors",
+                "로봇 & 반도체",
                 3,
                 "https://example.com/news/hbm4-ramp-up",
             ),
@@ -110,7 +110,7 @@ def build_domestic() -> dict:
                 ["레거시 공정 중심 수주 회복", "고객사 재고 조정 마무리 국면"],
                 "가동률 회복은 장비 재투자로 이어져 후방 장비업체 실적 개선에 긍정적일 것으로 추정된다. "
                 "다만 레거시 공정 중심 회복이라 첨단 공정 투자로 바로 연결될지는 불확실하다.",
-                "Robotics & Semiconductors",
+                "로봇 & 반도체",
                 10,
                 "https://example.com/news/foundry-utilization",
             ),
@@ -180,7 +180,7 @@ def build_domestic() -> dict:
                 "OO그룹이 전사 업무에 생성형 AI를 도입하고 AI 데이터센터 증설까지 검토하는 등, 대기업의 DX 전환을 위한 AI 도입 사례가 계속 확산되고 있다.",
             ],
             "headlines": [
-                {"category": "Robotics & Semiconductors", "headline": "OO전자, 차세대 HBM4 양산 돌입"},
+                {"category": "로봇 & 반도체", "headline": "OO전자, 차세대 HBM4 양산 돌입"},
                 {"category": "자동차 & 모빌리티", "headline": "완성차 OO그룹, 하이브리드 생산 비중 확대"},
                 {"category": "Artificial Intelligence", "headline": "OO그룹, 전사 생성형 AI 도입"},
             ],
@@ -193,7 +193,7 @@ def build_global() -> dict:
     industry = {name: empty_block() for name in INDUSTRY_CATEGORIES}
     business = {name: empty_block() for name in BUSINESS_CATEGORIES}
 
-    industry["Robotics & Semiconductors"] = category_block(
+    industry["로봇 & 반도체"] = category_block(
         ["Global Foundry Co.가 차세대 공정 노드에 100억 달러 규모 투자를 발표했으며, 다음 분기 착공을 목표로 AI 가속기용 생산능력 확충에 나선다."],
         [
             article(
@@ -201,7 +201,7 @@ def build_global() -> dict:
                 ["Capacity expansion targeted for AI accelerator demand", "Construction to begin next quarter"],
                 "This investment is likely to lift demand for upstream equipment and specialty gas suppliers (estimated). "
                 "Downstream AI chip designers may benefit from improved capacity access, though pricing pressure could persist.",
-                "Robotics & Semiconductors",
+                "로봇 & 반도체",
                 4,
                 "https://example.com/global/foundry-investment",
             ),
@@ -267,7 +267,7 @@ def build_global() -> dict:
                 "주요국이 첨단 반도체 장비에 대한 수출통제를 강화하면서 업계 단체들은 공급망 차질 가능성을 경고하고 나섰다.",
             ],
             "headlines": [
-                {"category": "Robotics & Semiconductors", "headline": "Global Foundry Co., $10B 신규 투자 발표"},
+                {"category": "로봇 & 반도체", "headline": "Global Foundry Co., $10B 신규 투자 발표"},
                 {"category": "에너지 & 전력", "headline": "전력망 업그레이드 발표 잇따라"},
                 {"category": "Geopolitics & Regulation", "headline": "첨단 반도체 장비 수출통제 강화"},
             ],

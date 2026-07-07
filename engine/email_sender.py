@@ -82,21 +82,23 @@ def build_email_html(economy: dict, domestic: dict, global_: dict) -> str:
 
     # 2. 국내 뉴스
     parts.append(f'<h2 style="{STYLE_H2}">국내 뉴스</h2>')
-    parts.append(_render_summary(domestic["summary"]))
     parts.append('<h3 style="' + STYLE_H3 + '">산업군</h3>')
+    parts.append(_render_summary(domestic["summary"]["industry"]))
     for name, block in domestic["categories"]["industry"].items():
         parts.append(_render_category_block(name, block))
     parts.append('<h3 style="' + STYLE_H3 + '">Business</h3>')
+    parts.append(_render_summary(domestic["summary"]["business"]))
     for name, block in domestic["categories"]["business"].items():
         parts.append(_render_category_block(name, block))
 
     # 3. 글로벌 뉴스
     parts.append(f'<h2 style="{STYLE_H2}">글로벌 뉴스</h2>')
-    parts.append(_render_summary(global_["summary"]))
     parts.append('<h3 style="' + STYLE_H3 + '">산업군</h3>')
+    parts.append(_render_summary(global_["summary"]["industry"]))
     for name, block in global_["categories"]["industry"].items():
         parts.append(_render_category_block(name, block))
     parts.append('<h3 style="' + STYLE_H3 + '">Business</h3>')
+    parts.append(_render_summary(global_["summary"]["business"]))
     for name, block in global_["categories"]["business"].items():
         parts.append(_render_category_block(name, block))
 

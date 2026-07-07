@@ -24,8 +24,11 @@
   "date": "YYYY-MM-DD",
   "generated_at": "ISO 8601",
   "summary": {
-    "overall_bullets": ["string — 아래 '요약 bullet 분량' 참고", ...],
-    "headlines": [{"category": "string", "headline": "string"}, ...]
+    "industry": {
+      "overall_bullets": ["string — 아래 '요약 bullet 분량' 참고", ...],
+      "headlines": [{"category": "string", "headline": "string"}, ...]
+    },
+    "business": { "overall_bullets": [...], "headlines": [...] }
   },
   "categories": {
     "industry": {
@@ -81,6 +84,12 @@
 ## 카테고리명 고정값
 
 - 산업군 16개(6번), Business 11개(7번), 경제 키워드 그룹 6개(8번) — 지시서에 명시된 표기를 **키 이름 그대로** 사용해야 프론트 라우팅과 어긋나지 않는다.
+
+## 제외 키워드
+
+`engine/categories.py`의 `EXCLUDE_KEYWORDS`(기본값: 오피니언·칼럼·사설)에 해당하는 단어가 제목/설명에 포함된 기사는
+수집 단계(`pipeline.py`의 네이버·구글·Currents 결과 처리)에서 후보 목록에 아예 넣지 않는다. 별도 UI는 없고
+코드에서 직접 관리한다.
 
 ## keywords.json — 카테고리별 검색 키워드 (엔진 ↔ 웹사이트 '키워드 설정' 탭 공용)
 

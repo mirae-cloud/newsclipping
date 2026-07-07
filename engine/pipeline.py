@@ -71,6 +71,8 @@ def _collect_domestic_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
                 n_articles = []
 
             for a in n_articles:
+                if categories.is_excluded(a.title, a.description):
+                    continue
                 candidates.append(
                     {
                         "title": a.title,
@@ -92,6 +94,8 @@ def _collect_domestic_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
                 g_articles = []
 
             for a in g_articles:
+                if categories.is_excluded(a.title, a.description):
+                    continue
                 candidates.append(
                     {
                         "title": a.title,
@@ -117,6 +121,8 @@ def _collect_global_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
                 c_articles = []
 
             for a in c_articles:
+                if categories.is_excluded(a.title, a.description):
+                    continue
                 candidates.append(
                     {
                         "title": a.title,
@@ -293,7 +299,11 @@ def _build_source_json(source: str) -> tuple[dict, list[str]]:
     industry_json = {name: category_blocks[name] for name in categories.INDUSTRY_CATEGORIES}
     business_json = {name: category_blocks[name] for name in categories.BUSINESS_CATEGORIES}
 
-    summary_json = _build_overall_summary({**industry_json, **business_json})
+    # 산업군/Business는 서로 다른 영역이라 요약도 따로 생성한다 (예전엔 하나로 합쳐서 두 탭에 같은 내용이 보였음).
+    summary_json = {
+        "industry": _build_overall_summary(industry_json),
+        "business": _build_overall_summary(business_json),
+    }
 
     result = {
         "date": date.today().isoformat(),
@@ -518,10 +528,10 @@ def main():
     print(f"\n총 실행 시간: {time.monotonic() - run_start:.1f}초")
 
 
-# gemini-3.5-flash 가격(2026-07 기준, 확인 필요 — 가격 페이지에서 재확인할 것): $1.50/1M input, $9/1M output.
-# 'thoughts' 토큰(추론)은 출력 토큰과 동일하게 과금되는 것으로 간주.
-PRICE_PER_M_INPUT_USD = 1.50
-PRICE_PER_M_OUTPUT_USD = 9.00
+# gemini-2.5-flash 가격(2026-07 기준, 확인 필요 — 가격 페이지에서 재확인할 것): $0.30/1M input, $2.50/1M output.
+# 'thoughts' 토큰(추론)은 출력 토큰과 동일하게 과금되는 것으로 간주. MODEL_NAME 바꾸면 이 값도 같이 바꿀 것.
+PRICE_PER_M_INPUT_USD = 0.30
+PRICE_PER_M_OUTPUT_USD = 2.50
 
 
 def _print_usage_summary():
