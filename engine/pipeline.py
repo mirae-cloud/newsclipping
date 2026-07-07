@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -16,6 +19,10 @@ from engine.sources import currents_news, ecos, fred, google_news, naver_news
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "docs" / "data"
+
+CATEGORY_WORKERS = 10  # 카테고리별 요약(Gemini 호출)을 동시에 처리할 스레드 수
+# 구글 링크 해제는 반복 호출 시 구글 쪽에서 느려지는 경향이 관찰되어 낮은 동시 실행 수 유지
+LINK_RESOLVE_WORKERS = 5
 
 # 카테고리당 대표 키워드 몇 개만 사용 (호출량/실행시간 절약). 노이즈가 많으면 조정할 것.
 KEYWORDS_PER_CATEGORY = 2
@@ -143,13 +150,10 @@ def _classify_and_group(candidates: list[dict], allowed_categories: list[str]) -
     return grouped
 
 
-def _resolve_url_if_google(candidate: dict) -> str:
-    if candidate.get("raw_source") == "google":
-        return google_news.resolve_link(candidate["url"])
-    return candidate["url"]
-
-
 def _build_category_block(category_name: str, cat_candidates: list[dict]) -> dict:
+    """Gemini 요약만 수행하고 링크 해제는 하지 않는다 — 구글 리다이렉트 해제는 느려서(기사당 수초~수십초)
+    전체를 모은 뒤 _finalize_articles()에서 한꺼번에 병렬로 처리한다. articles의 url/id는 그때 확정된다.
+    """
     if not cat_candidates:
         return {"sub_summary_bullets": [], "articles": [], "extra_topics": []}
 
@@ -165,12 +169,11 @@ def _build_category_block(category_name: str, cat_candidates: list[dict]) -> dic
         if sel.index >= len(cat_candidates):
             continue
         candidate = cat_candidates[sel.index]
-        url = _resolve_url_if_google(candidate)
         articles.append(
             {
-                "id": _make_id(url),
+                "_raw_source": candidate.get("raw_source"),
+                "url": candidate["url"],
                 "title": sel.title,
-                "url": url,
                 "bullets": sel.bullets,
                 "insight": sel.insight,
                 "published_at": candidate["published_at"].isoformat(),
@@ -183,6 +186,41 @@ def _build_category_block(category_name: str, cat_candidates: list[dict]) -> dic
         "articles": articles,
         "extra_topics": summary.extra_topics,
     }
+
+
+def _build_category_blocks_parallel(names: list[str], grouped: dict[str, list[dict]]) -> dict[str, dict]:
+    """카테고리별 Gemini 요약은 서로 독립적이므로 동시에 호출해 실행 시간을 줄인다."""
+    blocks: dict[str, dict] = {}
+    with ThreadPoolExecutor(max_workers=CATEGORY_WORKERS) as executor:
+        future_map = {executor.submit(_build_category_block, name, grouped[name]): name for name in names}
+        for future in as_completed(future_map):
+            name = future_map[future]
+            try:
+                blocks[name] = future.result()
+            except Exception as exc:  # noqa: BLE001
+                print(f"[gemini] '{name}' 요약 스레드 실패: {exc}")
+                blocks[name] = {"sub_summary_bullets": [], "articles": [], "extra_topics": []}
+    return blocks
+
+
+def _finalize_articles(category_blocks: dict[str, dict]) -> None:
+    """모든 카테고리의 기사 중 구글 소스인 것만 병렬로 링크를 해제하고, 전체 기사의 id를 확정한다 (in-place)."""
+    to_resolve = [a for block in category_blocks.values() for a in block["articles"] if a["_raw_source"] == "google"]
+
+    if to_resolve:
+        with ThreadPoolExecutor(max_workers=LINK_RESOLVE_WORKERS) as executor:
+            future_map = {executor.submit(google_news.resolve_link, a["url"]): a for a in to_resolve}
+            for future in as_completed(future_map):
+                article = future_map[future]
+                try:
+                    article["url"] = future.result()
+                except Exception:  # noqa: BLE001 — 실패 시 구글 리다이렉트 링크를 그대로 둔다
+                    pass
+
+    for block in category_blocks.values():
+        for article in block["articles"]:
+            article["id"] = _make_id(article["url"])
+            del article["_raw_source"]
 
 
 def _build_overall_summary(category_blocks: dict[str, dict]) -> dict:
@@ -216,8 +254,11 @@ def _build_source_json(source: str) -> dict:
     allowed = categories.INDUSTRY_CATEGORIES + categories.BUSINESS_CATEGORIES
     grouped = _classify_and_group(raw, allowed)
 
-    industry_json = {name: _build_category_block(name, grouped[name]) for name in categories.INDUSTRY_CATEGORIES}
-    business_json = {name: _build_category_block(name, grouped[name]) for name in categories.BUSINESS_CATEGORIES}
+    category_blocks = _build_category_blocks_parallel(allowed, grouped)
+    _finalize_articles(category_blocks)
+
+    industry_json = {name: category_blocks[name] for name in categories.INDUSTRY_CATEGORIES}
+    business_json = {name: category_blocks[name] for name in categories.BUSINESS_CATEGORIES}
 
     summary_json = _build_overall_summary({**industry_json, **business_json})
 
@@ -236,7 +277,8 @@ def _build_economy_news_json() -> dict:
     allowed = categories.ECONOMY_KEYWORD_GROUPS
     grouped = _classify_and_group(raw, allowed)
 
-    keyword_groups_json = {name: _build_category_block(name, grouped[name]) for name in allowed}
+    keyword_groups_json = _build_category_blocks_parallel(allowed, grouped)
+    _finalize_articles(keyword_groups_json)
     summary_json = _build_overall_summary(keyword_groups_json)
 
     return {"summary": summary_json, "keyword_groups": keyword_groups_json}
@@ -318,16 +360,24 @@ def _build_economy_json() -> dict:
 
 
 def main():
+    sys.stdout.reconfigure(line_buffering=True)  # 파일로 리다이렉트해도 진행 로그가 즉시 보이도록
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    run_start = time.monotonic()
 
     print("[1/3] 경제지표·경제 뉴스 수집 중...")
+    t0 = time.monotonic()
     economy_json = _build_economy_json()
+    print(f"  -> {time.monotonic() - t0:.1f}초")
 
     print("[2/3] 국내 뉴스 수집 중...")
+    t0 = time.monotonic()
     domestic_json = _build_source_json("domestic")
+    print(f"  -> {time.monotonic() - t0:.1f}초")
 
     print("[3/3] 글로벌 뉴스 수집 중...")
+    t0 = time.monotonic()
     global_json = _build_source_json("global")
+    print(f"  -> {time.monotonic() - t0:.1f}초")
 
     (DATA_DIR / "economy.json").write_text(json.dumps(economy_json, ensure_ascii=False, indent=2), encoding="utf-8")
     (DATA_DIR / "domestic.json").write_text(json.dumps(domestic_json, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -344,6 +394,7 @@ def main():
         print(f"[email] 발송 실패: {exc}")
 
     _print_usage_summary()
+    print(f"\n총 실행 시간: {time.monotonic() - run_start:.1f}초")
 
 
 # gemini-3.5-flash 가격(2026-07 기준, 확인 필요 — 가격 페이지에서 재확인할 것): $1.50/1M input, $9/1M output.
