@@ -7,6 +7,7 @@
 
 import json
 from pathlib import Path
+from urllib.parse import urlparse
 
 INDUSTRY_CATEGORIES = [
     "금융",
@@ -43,8 +44,22 @@ BUSINESS_CATEGORIES = [
 
 ECONOMY_KEYWORD_GROUPS = ["통화·금리", "물가·환율", "성장·경기", "주식·투자", "무역·정책", "금융·가계"]
 
-# 제목/설명에 이 단어가 포함된 기사는 수집 단계에서 제외한다 (오피니언·칼럼·사설류 배제).
-EXCLUDE_KEYWORDS = ["오피니언", "칼럼", "사설"]
+# 제목/설명에 이 단어가 포함된 기사는 수집 단계에서 제외한다 (오피니언·칼럼·사설·블로그류 배제).
+EXCLUDE_KEYWORDS = ["오피니언", "칼럼", "사설", "블로그", "Opinion", "Column", "Editorial", "Blog"]
+
+# 이 도메인에서 나온 기사는 제목에 특정 단어가 없어도 통째로 제외한다
+# (뉴스가 아니라 개인/기업 블로그 플랫폼인 경우 — 시작점(seed)이라 필요시 추가/삭제할 것).
+EXCLUDED_DOMAINS = [
+    "hackernoon.com",
+    "medium.com",
+    "dev.to",
+    "substack.com",
+    "blogspot.com",
+    "wordpress.com",
+    "tistory.com",
+    "brunch.co.kr",
+    "velog.io",
+]
 
 _KEYWORDS_PATH = Path(__file__).resolve().parent.parent / "docs" / "data" / "keywords.json"
 
@@ -64,6 +79,16 @@ def is_excluded(*texts: str) -> bool:
     """제목/설명 등에 EXCLUDE_KEYWORDS 중 하나라도 포함되어 있으면 True (대소문자 무시)."""
     combined = " ".join(t for t in texts if t).lower()
     return any(kw.lower() in combined for kw in EXCLUDE_KEYWORDS)
+
+
+def is_excluded_domain(url: str) -> bool:
+    """URL의 도메인이 EXCLUDED_DOMAINS(또는 그 서브도메인)에 해당하면 True."""
+    try:
+        host = urlparse(url).netloc.lower()
+    except ValueError:
+        return False
+    host = host.split(":")[0]  # 포트 제거
+    return any(host == d or host.endswith("." + d) for d in EXCLUDED_DOMAINS)
 
 
 _KEYWORDS = _load_keyword_sets()

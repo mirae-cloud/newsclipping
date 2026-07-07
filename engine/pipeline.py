@@ -71,7 +71,7 @@ def _collect_domestic_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
                 n_articles = []
 
             for a in n_articles:
-                if categories.is_excluded(a.title, a.description):
+                if categories.is_excluded(a.title, a.description) or categories.is_excluded_domain(a.original_link):
                     continue
                 candidates.append(
                     {
@@ -121,7 +121,7 @@ def _collect_global_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
                 c_articles = []
 
             for a in c_articles:
-                if categories.is_excluded(a.title, a.description):
+                if categories.is_excluded(a.title, a.description) or categories.is_excluded_domain(a.url):
                     continue
                 candidates.append(
                     {
@@ -246,6 +246,8 @@ def _finalize_articles(category_blocks: dict[str, dict]) -> None:
                     pass
 
     for block in category_blocks.values():
+        # 구글 리다이렉트는 해제 전엔 실제 도메인을 몰라 걸러낼 수 없었으므로, 여기서 최종 URL 기준으로 한 번 더 확인한다.
+        block["articles"] = [a for a in block["articles"] if not categories.is_excluded_domain(a["url"])]
         for article in block["articles"]:
             article["id"] = _make_id(article["url"])
             del article["_raw_source"]

@@ -85,11 +85,14 @@
 
 - 산업군 16개(6번), Business 11개(7번), 경제 키워드 그룹 6개(8번) — 지시서에 명시된 표기를 **키 이름 그대로** 사용해야 프론트 라우팅과 어긋나지 않는다.
 
-## 제외 키워드
+## 제외 키워드 / 제외 도메인
 
-`engine/categories.py`의 `EXCLUDE_KEYWORDS`(기본값: 오피니언·칼럼·사설)에 해당하는 단어가 제목/설명에 포함된 기사는
-수집 단계(`pipeline.py`의 네이버·구글·Currents 결과 처리)에서 후보 목록에 아예 넣지 않는다. 별도 UI는 없고
-코드에서 직접 관리한다.
+- `engine/categories.py`의 `EXCLUDE_KEYWORDS`(오피니언·칼럼·사설·블로그·Opinion·Column·Editorial·Blog)에 해당하는
+  단어가 제목/설명에 포함된 기사는 수집 단계에서 후보 목록에 아예 넣지 않는다.
+- `EXCLUDED_DOMAINS`(hackernoon.com, medium.com, substack.com 등 블로그 플랫폼)에 속한 URL도 제외한다.
+  네이버·Currents는 원문 URL을 바로 주므로 수집 즉시 걸러내고, 구글은 리다이렉트 해제 전엔 실제 도메인을 몰라
+  `_finalize_articles()`에서 최종 URL 확정 후 한 번 더 걸러낸다.
+- 둘 다 별도 UI는 없고 코드에서 직접 관리한다(시작점(seed) 목록이라 운영하며 추가/삭제할 것).
 
 ## keywords.json — 카테고리별 검색 키워드 (엔진 ↔ 웹사이트 '키워드 설정' 탭 공용)
 
