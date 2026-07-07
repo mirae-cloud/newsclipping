@@ -16,16 +16,15 @@ from pydantic import BaseModel
 from engine import config
 
 # 확인 필요: 무료 티어 최신 모델명은 자주 바뀜 — 구현 직전 가격/한도 페이지에서 재확인.
-# 기본 모델은 gemini-3.5-flash. 2026-07 실측 결과 이 프로젝트/키는 gemini-3.5-flash와
-# gemini-2.5-flash 둘 다 동일하게 "하루 20건" 한도에 걸렸다 — 모델별 차이가 아니라
-# 이 프로젝트가 결제 계정 미연결 등으로 계정 차원에서 제한된 것으로 추정(확인 필요).
-# 결제 계정 연결 여부를 Google AI Studio에서 확인 후 재테스트할 것.
+# 2026-07: 결제 계정 연결 후 Tier 1(유료)로 전환되어 하루 20건 제한은 해소됨.
 MODEL_NAME = "gemini-3.5-flash"
 
-# 서버가 20건 안팎에서 막히는 것을 감안해 자체적으로도 호출 속도를 낮게 유지(분당 8건).
-# 계정 한도 문제가 해결되면 이 값을 올려도 됨.
-MAX_REQUESTS_PER_MINUTE = 8
+# 유료 티어는 한도가 훨씬 넉넉하지만, 그래도 안전하게 분당 60건으로 자체 제한.
+MAX_REQUESTS_PER_MINUTE = 60
 _recent_call_times: deque = deque()
+
+# 토큰 사용량 누적 집계 (하루 실행당 비용 확인용)
+_usage_totals = {"prompt": 0, "candidates": 0, "thoughts": 0, "total": 0, "calls": 0}
 
 MAX_RETRIES = 4
 BASE_BACKOFF_SEC = 2.0
@@ -78,6 +77,7 @@ def _generate_json(prompt: str, schema: type[BaseModel]) -> BaseModel:
                     response_schema=schema,
                 ),
             )
+            _record_usage(response)
             if response.parsed is not None:
                 return response.parsed
             return schema.model_validate_json(response.text)
@@ -90,6 +90,22 @@ def _generate_json(prompt: str, schema: type[BaseModel]) -> BaseModel:
                 time.sleep(wait + 1)
 
     raise RuntimeError(f"Gemini 호출이 {MAX_RETRIES}회 재시도 후에도 실패했습니다: {last_error}")
+
+
+def _record_usage(response) -> None:
+    usage = getattr(response, "usage_metadata", None)
+    if usage is None:
+        return
+    _usage_totals["prompt"] += usage.prompt_token_count or 0
+    _usage_totals["candidates"] += usage.candidates_token_count or 0
+    _usage_totals["thoughts"] += usage.thoughts_token_count or 0
+    _usage_totals["total"] += usage.total_token_count or 0
+    _usage_totals["calls"] += 1
+
+
+def get_usage_summary() -> dict:
+    """이번 프로세스 실행 동안 누적된 Gemini 토큰 사용량 (하루 실행당 비용 확인용)."""
+    return dict(_usage_totals)
 
 
 # ---------- 프롬프트 공통 규칙 (지시서 5-2/6-1/7번) ----------

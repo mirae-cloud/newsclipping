@@ -343,6 +343,27 @@ def main():
     except Exception as exc:  # noqa: BLE001
         print(f"[email] 발송 실패: {exc}")
 
+    _print_usage_summary()
+
+
+# gemini-3.5-flash 가격(2026-07 기준, 확인 필요 — 가격 페이지에서 재확인할 것): $1.50/1M input, $9/1M output.
+# 'thoughts' 토큰(추론)은 출력 토큰과 동일하게 과금되는 것으로 간주.
+PRICE_PER_M_INPUT_USD = 1.50
+PRICE_PER_M_OUTPUT_USD = 9.00
+
+
+def _print_usage_summary():
+    usage = gemini_client.get_usage_summary()
+    output_tokens = usage["candidates"] + usage["thoughts"]
+    input_cost = usage["prompt"] / 1_000_000 * PRICE_PER_M_INPUT_USD
+    output_cost = output_tokens / 1_000_000 * PRICE_PER_M_OUTPUT_USD
+    print("\n--- Gemini 토큰 사용량 (이번 실행) ---")
+    print(f"호출 횟수: {usage['calls']}")
+    print(f"입력 토큰: {usage['prompt']:,}")
+    print(f"출력 토큰(응답 {usage['candidates']:,} + 추론 {usage['thoughts']:,}): {output_tokens:,}")
+    print(f"총 토큰: {usage['total']:,}")
+    print(f"예상 비용(가격은 확인 필요): 입력 ${input_cost:.4f} + 출력 ${output_cost:.4f} = 약 ${input_cost + output_cost:.4f}")
+
 
 if __name__ == "__main__":
     main()
