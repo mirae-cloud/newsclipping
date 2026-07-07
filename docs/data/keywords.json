@@ -2,97 +2,68 @@
   "industry": {
     "금융": {
       "ko": [
-        "은행",
         "대출",
         "카드",
         "보험",
         "증권",
-        "금융 규제",
-        "금융 상품"
+        "금융 기관"
       ],
       "en": [
-        "bank",
         "loan",
         "credit card",
         "insurance",
         "securities",
-        "financial sector",
-        "financial product"
+        "financial institution"
       ]
     },
     "TMT (기술 & 미디어 & 통신)": {
       "ko": [
         "통신",
-        "미디어",
-        "플랫폼",
-        "콘텐츠",
-        "클라우드",
         "빅테크",
         "첨단기술",
         "신기술",
-        "디지털"
+        "미디어 플랫폼"
       ],
       "en": [
         "telecom",
         "media platform",
         "cloud software",
         "big tech",
-        "deep tech",
-        "innovation",
-        "new tech",
-        "digital"
+        "advanced tech"
       ]
     },
     "로봇 & 반도체": {
       "ko": [
         "반도체",
         "파운드리",
-        "메모리",
-        "로봇",
         "로보틱스",
         "자동화",
-        "데이터센터",
-        "빅테크",
-        "HBM",
-        "CPU",
-        "GPU",
-        "NPU"
+        "데이터센터"
       ],
       "en": [
         "semiconductor",
         "foundry",
-        "memory chip",
         "robotics",
         "automation",
-        "data center",
-        "big tech",
-        "CPU",
-        "GPU",
-        "NPU"
+        "data center"
       ]
     },
     "헬스케어 & 라이프사이언스": {
       "ko": [
         "제약",
         "바이오",
-        "신약",
         "의료기기",
-        "병원",
         "임상",
         "헬스케어",
-        "빅파마",
-        "치료제",
-        "의학"
+        "치료제"
       ],
       "en": [
         "pharmaceutical",
         "biotech",
         "medical device",
         "clinical trial",
-        "medicine",
         "healthcare",
-        "big pharma",
-        "medical"
+        "big pharma"
       ]
     },
     "소비재 & 리테일 (B2C)": {
@@ -100,9 +71,7 @@
         "소비재",
         "유통",
         "리테일",
-        "이커머스",
-        "식품",
-        "화장품"
+        "이커머스"
       ],
       "en": [
         "consumer goods",
@@ -142,125 +111,19 @@
     },
     "산업재 (Industrial Goods)": {
       "ko": [
-        "철강",
-        "비철금속",
         "기계",
         "장비",
         "부품",
-        "조선",
-        "중공업"
+        "중공업",
+        "산업재",
+        "조선"
       ],
       "en": [
         "steel",
         "machinery",
-        "shipbuilding",
         "industrial",
-        "equipment"
-      ]
-    },
-    "운송 & 물류": {
-      "ko": [
-        "물류",
-        "화물",
-        "해운",
-        "택배",
-        "공급망",
-        "운송",
-        "배송"
-      ],
-      "en": [
-        "logistics",
-        "freight",
-        "shipping",
-        "supply chain"
-      ]
-    },
-    "건설 & 인프라": {
-      "ko": [
-        "건설",
-        "수주",
-        "인프라",
-        "플랜트",
-        "SOC",
-        "공장",
-        "클러스터"
-      ],
-      "en": [
-        "construction",
-        "infrastructure project",
-        "engineering contract",
-        "SOC",
-        "industrial complex"
-      ]
-    },
-    "부동산": {
-      "ko": [
-        "부동산",
-        "리츠",
-        "주택시장",
-        "부지",
-        "분양",
-        "전세",
-        "월세"
-      ],
-      "en": [
-        "real estate",
-        "REIT",
-        "mortgage",
-        "housing"
-      ]
-    },
-    "소재 & 화학": {
-      "ko": [
-        "석유화학",
-        "배터리소재",
-        "희토류",
-        "신소재",
-        "원자재"
-      ],
-      "en": [
-        "petrochemical",
-        "battery materials",
-        "rare materials",
-        "raw materials",
-        "chemical",
-        "advanced materials",
-        "new materials"
-      ]
-    },
-    "에너지 & 전력": {
-      "ko": [
-        "발전소",
-        "전력",
-        "원자력",
-        "태양광",
-        "풍력",
-        "신재생",
-        "송전",
-        "한전",
-        "에너지저장장치"
-      ],
-      "en": [
-        "power generation",
-        "nuclear power",
-        "renewable energy",
-        "power grid",
-        "electricity grid",
-        "ESS"
-      ]
-    },
-    "공공 & 사회 & 교육": {
-      "ko": [
-        "공공",
-        "교육",
-        "사회복지",
-        "비영리"
-      ],
-      "en": [
-        "government policy",
-        "public sector",
-        "education policy",
-        "non-profit"
+        "equipment",
+        "shipbuilding"
       ]
     },
     "방산": {
@@ -277,16 +140,75 @@
         "military weapons"
       ]
     },
+    "운송 & 물류": {
+      "ko": [
+        "물류",
+        "화물",
+        "택배",
+        "공급망",
+        "운송"
+      ],
+      "en": [
+        "logistics",
+        "freight",
+        "shipping",
+        "supply chain"
+      ]
+    },
+    "건설 & 인프라": {
+      "ko": [
+        "건설",
+        "수주",
+        "인프라",
+        "플랜트",
+        "SOC"
+      ],
+      "en": [
+        "construction",
+        "infrastructure project",
+        "engineering contract",
+        "SOC",
+        "industrial complex"
+      ]
+    },
+    "부동산": {
+      "ko": [
+        "부동산",
+        "리츠",
+        "분양",
+        "전세",
+        "월세"
+      ],
+      "en": [
+        "real estate",
+        "REIT",
+        "mortgage",
+        "housing"
+      ]
+    },
+    "소재 & 화학": {
+      "ko": [
+        "석유화학",
+        "희토류",
+        "신소재",
+        "원자재"
+      ],
+      "en": [
+        "petrochemical",
+        "rare materials",
+        "raw materials",
+        "chemical",
+        "advanced materials",
+        "new materials"
+      ]
+    },
     "석탄 & 석유 & 가스": {
       "ko": [
         "석유",
-        "원유",
         "천연가스",
         "LNG",
-        "정유",
-        "유가",
         "석탄",
-        "도시가스"
+        "정유"
       ],
       "en": [
         "crude oil",
@@ -294,6 +216,36 @@
         "LNG",
         "refinery",
         "coal"
+      ]
+    },
+    "에너지 & 전력": {
+      "ko": [
+        "발전소",
+        "전력",
+        "원자력",
+        "신재생",
+        "에너지저장장치"
+      ],
+      "en": [
+        "power generation",
+        "nuclear power",
+        "renewable energy",
+        "power grid",
+        "ESS"
+      ]
+    },
+    "공공 & 사회 & 교육": {
+      "ko": [
+        "공공",
+        "교육",
+        "사회복지",
+        "비영리"
+      ],
+      "en": [
+        "government policy",
+        "public sector",
+        "education policy",
+        "non-profit"
       ]
     }
   },
@@ -470,25 +422,17 @@
   "economy": {
     "통화 & 금리": {
       "ko": [
-        "기준금리",
         "금리",
         "국채",
-        "채권",
         "한국은행",
         "금통위",
-        "Fed",
-        "FOMC",
-        "연준",
-        "금리인하",
-        "금리인상"
+        "연준"
       ],
       "en": [
         "interest rate",
         "Fed",
         "FOMC",
-        "central bank",
-        "rate cut",
-        "rate hike"
+        "central bank"
       ]
     },
     "물가 & 환율": {
@@ -496,7 +440,6 @@
         "소비자물가",
         "인플레이션",
         "CPI",
-        "원/달러",
         "환율",
         "외환"
       ],
@@ -512,7 +455,6 @@
         "GDP",
         "경제성장률",
         "경기 침체",
-        "실업률",
         "고용지표",
         "성장 전망"
       ],
@@ -521,7 +463,6 @@
         "economic growth",
         "recession",
         "unemployment rate",
-        "growth forecast",
         "growth outlook"
       ]
     },
@@ -531,7 +472,6 @@
         "코스닥",
         "증권",
         "증시",
-        "나스닥",
         "투자"
       ],
       "en": [
@@ -542,23 +482,18 @@
     },
     "무역 & 정책": {
       "ko": [
-        "수출",
-        "수입",
-        "무역수지",
-        "관세",
         "경제 정책",
         "재정정책",
-        "통화정책",
-        "금융 당국"
+        "금융 당국",
+        "무역",
+        "관세"
       ],
       "en": [
+        "fiscal policy",
         "tariff",
         "export",
         "import",
-        "monetary policy",
-        "fiscal policy",
-        "financial authority",
-        "financial regulator"
+        "economic policy"
       ]
     },
     "금융 & 가계": {
@@ -567,10 +502,7 @@
         "신용대출",
         "가계대출",
         "은행",
-        "저축은행",
-        "인터넷은행",
-        "금융권",
-        "중저신용자"
+        "금융권"
       ],
       "en": [
         "household debt",
