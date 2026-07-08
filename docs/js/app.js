@@ -629,6 +629,14 @@ async function init() {
   } catch {
     draft = null;
   }
+
+  // 편집 내용을 keywords.json에 반영·배포해서 실제 데이터와 draft가 같아지면
+  // 더 이상 "임시 편집 중" 상태가 아니므로 draft를 정리한다.
+  if (draft && JSON.stringify(draft) === JSON.stringify(keywords)) {
+    localStorage.removeItem(KEYWORDS_DRAFT_KEY);
+    draft = null;
+  }
+
   state.keywords = draft || JSON.parse(JSON.stringify(keywords));
   state.keywordsIsDraft = Boolean(draft);
 
