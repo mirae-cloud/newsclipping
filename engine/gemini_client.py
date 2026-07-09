@@ -34,7 +34,7 @@ PARALLEL_WORKERS = 10
 _usage_totals = {"prompt": 0, "candidates": 0, "thoughts": 0, "total": 0, "calls": 0}
 _usage_lock = threading.Lock()
 
-MAX_RETRIES = 4
+MAX_RETRIES = 7
 BASE_BACKOFF_SEC = 2.0
 
 _client: Optional[genai.Client] = None
