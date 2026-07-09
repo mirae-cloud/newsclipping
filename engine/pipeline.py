@@ -490,6 +490,15 @@ def retry_failed():
     print("재시도 완료.")
 
 
+def _count_articles(json_obj: dict, kind: str) -> int:
+    if kind == "economy":
+        return sum(len(g["articles"]) for g in json_obj["news"]["keyword_groups"].values())
+    total = 0
+    for sub in ("industry", "business"):
+        total += sum(len(c["articles"]) for c in json_obj["categories"][sub].values())
+    return total
+
+
 def main():
     sys.stdout.reconfigure(line_buffering=True)  # 파일로 리다이렉트해도 진행 로그가 즉시 보이도록
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -498,17 +507,17 @@ def main():
     print("[1/3] 경제지표·경제 뉴스 수집 중...")
     t0 = time.monotonic()
     economy_json, economy_failed = _build_economy_json()
-    print(f"  -> {time.monotonic() - t0:.1f}초")
+    print(f"  -> {time.monotonic() - t0:.1f}초 (기사 {_count_articles(economy_json, 'economy')}건)")
 
     print("[2/3] 국내 뉴스 수집 중...")
     t0 = time.monotonic()
     domestic_json, domestic_failed = _build_source_json("domestic")
-    print(f"  -> {time.monotonic() - t0:.1f}초")
+    print(f"  -> {time.monotonic() - t0:.1f}초 (기사 {_count_articles(domestic_json, 'domestic')}건)")
 
     print("[3/3] 글로벌 뉴스 수집 중...")
     t0 = time.monotonic()
     global_json, global_failed = _build_source_json("global")
-    print(f"  -> {time.monotonic() - t0:.1f}초")
+    print(f"  -> {time.monotonic() - t0:.1f}초 (기사 {_count_articles(global_json, 'global')}건)")
 
     (DATA_DIR / "economy.json").write_text(json.dumps(economy_json, ensure_ascii=False, indent=2), encoding="utf-8")
     (DATA_DIR / "domestic.json").write_text(json.dumps(domestic_json, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -516,12 +525,30 @@ def main():
 
     print(f"완료 — {DATA_DIR} 에 저장됨.")
 
+    # 카테고리 몇 개가 우연히 비는 것과 달리, 세 소스 전체에서 기사가 0건인 것은 정상적인 '오늘 뉴스 없음'이
+    # 아니라 수집 단계(Naver/Google/Currents) 자체의 이상일 가능성이 매우 높다. 이 경우 평소처럼 "성공"으로
+    # 조용히 넘어가지 않도록 전체 카테고리를 재시도 대상으로 표시하고 이메일 제목에도 경고를 남긴다.
+    total_articles = (
+        _count_articles(economy_json, "economy")
+        + _count_articles(domestic_json, "domestic")
+        + _count_articles(global_json, "global")
+    )
+    collection_suspected_failure = total_articles == 0
+    if collection_suspected_failure:
+        print("[경고] 전체 기사 수집 결과가 0건입니다 — 수집 단계(Naver/Google/Currents) 이상이 의심됩니다.")
+        economy_failed = list(categories.ECONOMY_KEYWORD_GROUPS)
+        domestic_failed = categories.INDUSTRY_CATEGORIES + categories.BUSINESS_CATEGORIES
+        global_failed = categories.INDUSTRY_CATEGORIES + categories.BUSINESS_CATEGORIES
+
     _save_failed_categories({"economy": economy_failed, "domestic": domestic_failed, "global": global_failed})
 
     print("이메일 발송 중...")
+    subject = f"뉴스클리핑 {economy_json['date']}"
+    if collection_suspected_failure:
+        subject = f"[수집 실패 의심] {subject}"
     try:
         html_body = email_sender.build_email_html(economy_json, domestic_json, global_json)
-        email_sender.send_email(html_body, subject=f"뉴스클리핑 {economy_json['date']}")
+        email_sender.send_email(html_body, subject=subject)
         print("이메일 발송 완료.")
     except Exception as exc:  # noqa: BLE001
         print(f"[email] 발송 실패: {exc}")
