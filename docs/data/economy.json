@@ -1,6 +1,6 @@
 {
-  "date": "2026-07-10",
-  "generated_at": "2026-07-10T10:31:44.977174+00:00",
+  "date": "2026-07-11",
+  "generated_at": "2026-07-11T06:28:35.479399+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
@@ -253,12 +253,8 @@
       "us": {
         "latest": 3.75,
         "avg_1m": 3.75,
-        "avg_1y": 3.98,
+        "avg_1y": 3.978,
         "history_5y": [
-          {
-            "date": "2021-07-11",
-            "value": 0.25
-          },
           {
             "date": "2021-07-12",
             "value": 0.25
@@ -7554,6 +7550,10 @@
           {
             "date": "2026-07-09",
             "value": 3.75
+          },
+          {
+            "date": "2026-07-10",
+            "value": 3.75
           }
         ]
       }
@@ -12972,6 +12972,21 @@
       "headlines": []
     },
     "keyword_groups": {
+      "성장 & 경기": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "무역 & 정책": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "금융 & 가계": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
       "통화 & 금리": {
         "sub_summary_bullets": [],
         "articles": [],
@@ -12982,22 +12997,7 @@
         "articles": [],
         "extra_topics": []
       },
-      "성장 & 경기": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
       "주식 & 투자": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "금융 & 가계": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "무역 & 정책": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
