@@ -382,21 +382,32 @@ def _normalize_ecos_time(time_str: str, cycle: str) -> str:
     return time_str
 
 
+def _safe_fetch_indicator(label: str, fetch_fn) -> list:
+    """ECOS/FRED 중 하나가 일시적으로 실패해도(네트워크·API 오류 등) 그 지표만 비워두고
+    나머지 지표·뉴스 수집·이메일 발송은 계속 진행되게 한다 (Naver/Google/Currents/Gemini와
+    동일한 방어 패턴 — 2026-07-12 ECOS 실패로 파이프라인 전체가 죽었던 사례로 발견)."""
+    try:
+        return fetch_fn()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[indicator] '{label}' 조회 실패: {exc}")
+        return []
+
+
 def _build_economy_json() -> tuple[dict, list[str], int]:
-    kr_rate = ecos.fetch_policy_rate_kr()
+    kr_rate = _safe_fetch_indicator("한국 기준금리", ecos.fetch_policy_rate_kr)
     for p in kr_rate:
         p.date_str = _normalize_ecos_time(p.date_str, "M")
 
-    kr_cpi = ecos.fetch_cpi_kr()
+    kr_cpi = _safe_fetch_indicator("한국 CPI", ecos.fetch_cpi_kr)
     for p in kr_cpi:
         p.date_str = _normalize_ecos_time(p.date_str, "M")
 
-    fx = ecos.fetch_fx_usd_krw()
+    fx = _safe_fetch_indicator("원달러 환율", ecos.fetch_fx_usd_krw)
     for p in fx:
         p.date_str = _normalize_ecos_time(p.date_str, "D")
 
-    us_rate = fred.fetch_policy_rate_us()
-    us_cpi = fred.fetch_cpi_us()
+    us_rate = _safe_fetch_indicator("미국 기준금리", fred.fetch_policy_rate_us)
+    us_cpi = _safe_fetch_indicator("미국 CPI", fred.fetch_cpi_us)
 
     indicators = {
         "policy_rate": {
@@ -610,4 +621,17 @@ if __name__ == "__main__":
     if "--retry-failed" in sys.argv:
         retry_failed()
     else:
-        main()
+        try:
+            main()
+        except Exception as exc:  # noqa: BLE001
+            # 2026-07-12 ECOS 호출 실패로 파이프라인이 통째로 죽어도 아무 알림 없이 조용히 실패했던
+            # 사례가 있었다. 예상치 못한 다른 원인으로 또 죽더라도 최소한 이메일로는 알 수 있게 한다.
+            print(f"[fatal] 파이프라인이 예상치 못한 오류로 중단됐습니다: {exc}")
+            try:
+                email_sender.send_email(
+                    f"<p>파이프라인이 예상치 못한 오류로 중단됐습니다.</p><pre>{exc}</pre>",
+                    subject=f"[파이프라인 오류] 뉴스클리핑 실행 실패 ({_today_kst()})",
+                )
+            except Exception as email_exc:  # noqa: BLE001
+                print(f"[fatal] 오류 알림 메일도 발송 실패: {email_exc}")
+            raise
