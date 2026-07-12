@@ -547,6 +547,8 @@ def main():
         json.dumps(
             {
                 "generated_at": datetime.now(timezone.utc).isoformat(),
+                "python_version": sys.version,
+                "gemini_error_samples": gemini_client.get_error_samples(),
                 "economy": {"raw_candidates": economy_raw, "final_articles": economy_final, "failed_categories": economy_failed},
                 "domestic": {"raw_candidates": domestic_raw, "final_articles": domestic_final, "failed_categories": domestic_failed},
                 "global": {"raw_candidates": global_raw, "final_articles": global_final, "failed_categories": global_failed},

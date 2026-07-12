@@ -34,6 +34,24 @@ PARALLEL_WORKERS = 10
 _usage_totals = {"prompt": 0, "candidates": 0, "thoughts": 0, "total": 0, "calls": 0}
 _usage_lock = threading.Lock()
 
+# Gemini 호출이 재시도를 모두 소진하고 실패한 경우의 실제 예외 메시지를 몇 개만 표본으로 남긴다.
+# Actions 로그는 저장소 admin 권한이 없으면 못 보므로, 이 표본을 diagnostics.json에 실어 보내
+# git pull만으로 '왜' 실패했는지(인증/과금/버전 등) 확인할 수 있게 한다.
+_MAX_ERROR_SAMPLES = 5
+_error_samples: list[str] = []
+_error_lock = threading.Lock()
+
+
+def _record_error(exc: Exception) -> None:
+    with _error_lock:
+        if len(_error_samples) < _MAX_ERROR_SAMPLES:
+            _error_samples.append(str(exc))
+
+
+def get_error_samples() -> list[str]:
+    with _error_lock:
+        return list(_error_samples)
+
 MAX_RETRIES = 7
 BASE_BACKOFF_SEC = 2.0
 
@@ -104,6 +122,7 @@ def _generate_json(prompt: str, schema: type[BaseModel]) -> BaseModel:
                     wait = BASE_BACKOFF_SEC * (2**attempt)
                 time.sleep(wait + 1)
 
+    _record_error(last_error)
     raise RuntimeError(f"Gemini 호출이 {MAX_RETRIES}회 재시도 후에도 실패했습니다: {last_error}")
 
 
