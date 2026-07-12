@@ -165,6 +165,10 @@ ROUTING_RULES = """
 - 기업의 치명적·혁신적 인사/노조 이슈(예: 노조 갈등)는 "Artificial Intelligence"가 아니라 "PMI / Operations"로 분류.
   단, 일반적인 조직 혁신·HR 이슈는 두 카테고리 모두에서 제외.
 - 'DX를 위한 AI 도입' 류 기사는 "Artificial Intelligence"로 분류.
+- "New Business / Business Building" vs "New Market Entry / Go-To-Market": 기존 사업과 구별되는
+  신규 사업 아이템·신사업 모델 자체를 발굴·착수하는 기사는 "New Business / Business Building".
+  기존 사업의 해외/신규 지역·신규 채널·신규 고객층 진출·확장(예: 해외 유통사와 업무협약을 통한
+  해외 시장 진출)은 "New Market Entry / Go-To-Market"으로 분류.
 """
 
 SUMMARY_LENGTH_RULE = """

@@ -35,7 +35,7 @@ BUSINESS_CATEGORIES = [
     "Strategy",
     "PMI / Operations",
     "New Business / Business Building",
-    "Go-To-Market",
+    "New Market Entry / Go-To-Market",
     "Geopolitics & Regulation",
     "ESG & Sustainability",
     "Risk & Resilience",
