@@ -165,15 +165,18 @@ ROUTING_RULES = """
 - 기업의 치명적·혁신적 인사/노조 이슈(예: 노조 갈등)는 "Artificial Intelligence"가 아니라 "PMI / Operations"로 분류.
   단, 일반적인 조직 혁신·HR 이슈는 두 카테고리 모두에서 제외.
 - 'DX를 위한 AI 도입' 류 기사는 "Artificial Intelligence"로 분류.
-- "M&A / Strategic Investment" vs "New Business / Business Building" vs "New Market Entry / Go-To-Market"
-  (셋 다 해당 가능해 보이는 기사가 많으므로 아래 순서로 판단할 것):
-  1. 특정 기업에 대한 지분투자·인수·합병처럼 구체적인 거래 대상(피인수·피투자 기업)이 있는 기사만
-     "M&A / Strategic Investment". 신규 시장·사업 진출이 "목적"이어도 지분투자·인수 형태가 아니면
-     이 카테고리가 아님(예: "한화그룹, 미국 AI 및 방산 시장 본격 진출"처럼 특정 대상 기업의 지분
-     인수가 아닌 진출 발표는 M&A가 아니라 New Business).
-  2. 기존 사업과 구별되는 신규 사업 영역·아이템·모델 자체를 새로 발굴·착수하는 기사(지역을 막론하고,
+- "M&A / Strategic Investment" vs "Corporate Finance / Turnaround" vs "New Business / Business Building"
+  vs "New Market Entry / Go-To-Market" (넷 다 해당 가능해 보이는 기사가 많으므로 아래 순서로 판단할 것):
+  1. 계열사·자회사·보유 지분 등을 파는(매각) 기사는 인수 주체가 아니라 "매도자" 관점이므로
+     "M&A / Strategic Investment"가 아니라 "Corporate Finance / Turnaround"(재무구조 조정)로 분류
+     (예: "SK, 실트론 매각 이달 중 결정"은 SK의 재무구조 조정 결정이므로 Corporate Finance / Turnaround).
+  2. 특정 기업의 지분을 사들이거나 인수·합병하는(매수) 기사만 "M&A / Strategic Investment".
+     신규 시장·사업 진출이 "목적"이어도 지분 인수 형태가 아니면 이 카테고리가 아님
+     (예: "한화그룹, 미국 AI 및 방산 시장 본격 진출"처럼 특정 대상 기업의 지분 인수가 아닌 진출
+     발표는 M&A가 아니라 New Business).
+  3. 기존 사업과 구별되는 신규 사업 영역·아이템·모델 자체를 새로 발굴·착수하는 기사(지역을 막론하고,
      기존에 하지 않던 사업/산업으로 진출하는 경우 포함)는 "New Business / Business Building".
-  3. 기존에 하던 동일 사업을 해외/신규 지역·신규 채널·신규 고객층으로 넓히는 기사(예: 기존 제품을
+  4. 기존에 하던 동일 사업을 해외/신규 지역·신규 채널·신규 고객층으로 넓히는 기사(예: 기존 제품을
      해외 유통사와 업무협약으로 해외에 파는 것)만 "New Market Entry / Go-To-Market".
 """
 
