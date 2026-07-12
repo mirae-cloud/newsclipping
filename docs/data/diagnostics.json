@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-12T07:28:42.914856+00:00",
+  "generated_at": "2026-07-12T07:39:24.750601+00:00",
   "python_version": "3.11.15 (main, Jun 16 2026, 21:41:52) [GCC 13.3.0]",
   "gemini_error_samples": [],
   "economy": {
-    "raw_candidates": 665,
+    "raw_candidates": 661,
     "final_articles": 0,
     "failed_categories": [
       "통화 & 금리",
@@ -15,7 +15,7 @@
     ]
   },
   "domestic": {
-    "raw_candidates": 1325,
+    "raw_candidates": 1303,
     "final_articles": 0,
     "failed_categories": [
       "금융",
@@ -48,7 +48,7 @@
     ]
   },
   "global": {
-    "raw_candidates": 777,
+    "raw_candidates": 1266,
     "final_articles": 0,
     "failed_categories": [
       "금융",
