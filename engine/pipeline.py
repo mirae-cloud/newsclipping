@@ -11,13 +11,23 @@ import json
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from engine import categories, email_sender, gemini_client
 from engine.sources import currents_news, ecos, fred, google_news, naver_news
 
 ROOT = Path(__file__).resolve().parent.parent
+KST = ZoneInfo("Asia/Seoul")
+
+
+def _today_kst() -> str:
+    """실행 서버(GitHub Actions 러너)는 UTC를 쓰므로, date.today()를 그대로 쓰면 KST 자정 전후
+    실행 시 하루 어긋난 날짜가 찍힌다. 항상 KST 기준 '오늘'을 명시적으로 계산한다."""
+    return datetime.now(KST).date().isoformat()
+
+
 DATA_DIR = ROOT / "docs" / "data"
 
 # 실행 중 Gemini 요약이 실패한(503 등 일시적 오류) 카테고리 목록을 기록해두는 파일.
@@ -285,11 +295,12 @@ def _mark_classify_failures(classify_failed: bool, allowed: list[str], blocks: d
     return failed
 
 
-def _build_source_json(source: str) -> tuple[dict, list[str]]:
+def _build_source_json(source: str) -> tuple[dict, list[str], int]:
     if source == "domestic":
         raw = _collect_domestic_raw({**categories.INDUSTRY_KEYWORDS, **categories.BUSINESS_KEYWORDS})
     else:
         raw = _collect_global_raw({**categories.INDUSTRY_KEYWORDS_EN, **categories.BUSINESS_KEYWORDS_EN})
+    raw_count = len(raw)
 
     allowed = categories.INDUSTRY_CATEGORIES + categories.BUSINESS_CATEGORIES
     grouped, classify_failed = _classify_and_group(raw, allowed)
@@ -308,17 +319,18 @@ def _build_source_json(source: str) -> tuple[dict, list[str]]:
     }
 
     result = {
-        "date": date.today().isoformat(),
+        "date": _today_kst(),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": summary_json,
         "categories": {"industry": industry_json, "business": business_json},
     }
-    return result, failed
+    return result, failed, raw_count
 
 
-def _build_economy_news_json() -> tuple[dict, list[str]]:
+def _build_economy_news_json() -> tuple[dict, list[str], int]:
     raw = _collect_domestic_raw(categories.ECONOMY_KEYWORDS) + _collect_global_raw(categories.ECONOMY_KEYWORDS_EN)
     raw = _dedup(raw)
+    raw_count = len(raw)
 
     allowed = categories.ECONOMY_KEYWORD_GROUPS
     grouped, classify_failed = _classify_and_group(raw, allowed)
@@ -328,7 +340,7 @@ def _build_economy_news_json() -> tuple[dict, list[str]]:
     _finalize_articles(keyword_groups_json)
     summary_json = _build_overall_summary(keyword_groups_json)
 
-    return {"summary": summary_json, "keyword_groups": keyword_groups_json}, failed
+    return {"summary": summary_json, "keyword_groups": keyword_groups_json}, failed, raw_count
 
 
 # ---------- 경제지표 ----------
@@ -370,7 +382,7 @@ def _normalize_ecos_time(time_str: str, cycle: str) -> str:
     return time_str
 
 
-def _build_economy_json() -> tuple[dict, list[str]]:
+def _build_economy_json() -> tuple[dict, list[str], int]:
     kr_rate = ecos.fetch_policy_rate_kr()
     for p in kr_rate:
         p.date_str = _normalize_ecos_time(p.date_str, "M")
@@ -398,14 +410,14 @@ def _build_economy_json() -> tuple[dict, list[str]]:
         "fx_usd_krw": _indicator_block_daily(fx),
     }
 
-    news_json, failed = _build_economy_news_json()
+    news_json, failed, raw_count = _build_economy_news_json()
     result = {
-        "date": date.today().isoformat(),
+        "date": _today_kst(),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "indicators": indicators,
         "news": news_json,
     }
-    return result, failed
+    return result, failed, raw_count
 
 
 # ---------- 실패 카테고리 재시도 ----------
@@ -506,18 +518,21 @@ def main():
 
     print("[1/3] 경제지표·경제 뉴스 수집 중...")
     t0 = time.monotonic()
-    economy_json, economy_failed = _build_economy_json()
-    print(f"  -> {time.monotonic() - t0:.1f}초 (기사 {_count_articles(economy_json, 'economy')}건)")
+    economy_json, economy_failed, economy_raw = _build_economy_json()
+    economy_final = _count_articles(economy_json, "economy")
+    print(f"  -> {time.monotonic() - t0:.1f}초 (원본 후보 {economy_raw}건 -> 최종 기사 {economy_final}건)")
 
     print("[2/3] 국내 뉴스 수집 중...")
     t0 = time.monotonic()
-    domestic_json, domestic_failed = _build_source_json("domestic")
-    print(f"  -> {time.monotonic() - t0:.1f}초 (기사 {_count_articles(domestic_json, 'domestic')}건)")
+    domestic_json, domestic_failed, domestic_raw = _build_source_json("domestic")
+    domestic_final = _count_articles(domestic_json, "domestic")
+    print(f"  -> {time.monotonic() - t0:.1f}초 (원본 후보 {domestic_raw}건 -> 최종 기사 {domestic_final}건)")
 
     print("[3/3] 글로벌 뉴스 수집 중...")
     t0 = time.monotonic()
-    global_json, global_failed = _build_source_json("global")
-    print(f"  -> {time.monotonic() - t0:.1f}초 (기사 {_count_articles(global_json, 'global')}건)")
+    global_json, global_failed, global_raw = _build_source_json("global")
+    global_final = _count_articles(global_json, "global")
+    print(f"  -> {time.monotonic() - t0:.1f}초 (원본 후보 {global_raw}건 -> 최종 기사 {global_final}건)")
 
     (DATA_DIR / "economy.json").write_text(json.dumps(economy_json, ensure_ascii=False, indent=2), encoding="utf-8")
     (DATA_DIR / "domestic.json").write_text(json.dumps(domestic_json, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -525,14 +540,27 @@ def main():
 
     print(f"완료 — {DATA_DIR} 에 저장됨.")
 
+    # 매 실행마다 수집 단계별 수치를 커밋되는 파일로 남긴다 — Actions 로그는 저장소 admin 권한이 없으면
+    # 못 보므로, git으로 당겨보는 것만으로 '원본 후보 자체가 0인지(수집 단계 문제) vs 원본은 있는데
+    # 분류/요약에서 걸러졌는지(Gemini 단계 문제)'를 다음날 바로 구분할 수 있게 하기 위함.
+    (DATA_DIR / "diagnostics.json").write_text(
+        json.dumps(
+            {
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "economy": {"raw_candidates": economy_raw, "final_articles": economy_final, "failed_categories": economy_failed},
+                "domestic": {"raw_candidates": domestic_raw, "final_articles": domestic_final, "failed_categories": domestic_failed},
+                "global": {"raw_candidates": global_raw, "final_articles": global_final, "failed_categories": global_failed},
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
     # 카테고리 몇 개가 우연히 비는 것과 달리, 세 소스 전체에서 기사가 0건인 것은 정상적인 '오늘 뉴스 없음'이
     # 아니라 수집 단계(Naver/Google/Currents) 자체의 이상일 가능성이 매우 높다. 이 경우 평소처럼 "성공"으로
     # 조용히 넘어가지 않도록 전체 카테고리를 재시도 대상으로 표시하고 이메일 제목에도 경고를 남긴다.
-    total_articles = (
-        _count_articles(economy_json, "economy")
-        + _count_articles(domestic_json, "domestic")
-        + _count_articles(global_json, "global")
-    )
+    total_articles = economy_final + domestic_final + global_final
     collection_suspected_failure = total_articles == 0
     if collection_suspected_failure:
         print("[경고] 전체 기사 수집 결과가 0건입니다 — 수집 단계(Naver/Google/Currents) 이상이 의심됩니다.")
