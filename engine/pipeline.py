@@ -120,6 +120,9 @@ def _collect_domestic_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
     return _dedup(candidates)
 
 
+CURRENTS_REQUEST_DELAY_SEC = 0.5  # 무료 티어 요청 속도 제한(429 "Too many requests") 회피용 호출 간 딜레이
+
+
 def _collect_global_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
     candidates = []
     for cat_name, keywords in keyword_map.items():
@@ -129,6 +132,7 @@ def _collect_global_raw(keyword_map: dict[str, list[str]]) -> list[dict]:
             except Exception as exc:  # noqa: BLE001
                 print(f"[currents] '{kw}' 검색 실패: {exc}")
                 c_articles = []
+            time.sleep(CURRENTS_REQUEST_DELAY_SEC)
 
             for a in c_articles:
                 if categories.is_excluded(a.title, a.description) or categories.is_excluded_domain(a.url):
