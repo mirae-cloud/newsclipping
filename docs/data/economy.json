@@ -1,6 +1,6 @@
 {
   "date": "2026-07-12",
-  "generated_at": "2026-07-12T06:18:11.555509+00:00",
+  "generated_at": "2026-07-12T07:26:31.819144+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
@@ -12973,7 +12973,7 @@
         "articles": [],
         "extra_topics": []
       },
-      "통화 & 금리": {
+      "주식 & 투자": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
@@ -12983,7 +12983,7 @@
         "articles": [],
         "extra_topics": []
       },
-      "주식 & 투자": {
+      "통화 & 금리": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
