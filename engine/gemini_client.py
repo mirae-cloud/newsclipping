@@ -95,12 +95,12 @@ def _generate_json(prompt: str, schema: type[BaseModel]) -> BaseModel:
 
     thinking_budget=0으로 추론 토큰을 꺼서 지연시간·비용을 줄인다(분류/요약은 복잡한 추론이 필요 없는 구조화 추출 작업).
     """
-    client = _get_client()
     last_error = None
 
     for attempt in range(MAX_RETRIES):
         _throttle()
         try:
+            client = _get_client()
             response = client.models.generate_content(
                 model=MODEL_NAME,
                 contents=prompt,
