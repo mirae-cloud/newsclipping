@@ -291,6 +291,7 @@ def summarize_category(category_name: str, articles: list[dict]) -> CategorySumm
 - 위 관련성 기준의 제외 대상에 해당하는 기사는 selected와 extra_topics 어디에도 포함하지 말고 완전히 무시할 것.
 - 포함 대상 기사 중에서, 규모·변화 정도·산업 내 위치 등을 고려해 가장 핵심적이고 중요한 기사를 최대 3개까지 선택(selected)할 것.
 - 선택되지 않은 포함 대상 기사 중 참고할 만한 것이 있으면 주제당 15~20자 이내로 extra_topics에 기재할 것 (없으면 빈 배열).
+  단, 아무리 많아도 최대 10개까지만 작성하고, 중요도가 높은 순서대로 나열할 것.
 
 {SUMMARY_LENGTH_RULE}
 (sub_summary_bullets에 적용. 1~2개 문장)

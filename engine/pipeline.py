@@ -41,6 +41,9 @@ LINK_RESOLVE_WORKERS = 5
 # 카테고리당 대표 키워드 몇 개만 사용 (호출량/실행시간 절약). 노이즈가 많으면 조정할 것.
 KEYWORDS_PER_CATEGORY = 6
 
+# '그 외' 항목이 너무 길어지지 않도록 상한을 둔다 (프롬프트로도 지시하지만, 모델이 안 지킬 경우를 대비한 방어적 컷).
+MAX_EXTRA_TOPICS = 10
+
 
 def _make_id(url: str) -> str:
     return hashlib.sha1(url.encode("utf-8")).hexdigest()[:12]
@@ -220,7 +223,7 @@ def _build_category_block(category_name: str, cat_candidates: list[dict]) -> tup
     return {
         "sub_summary_bullets": summary.sub_summary_bullets,
         "articles": articles,
-        "extra_topics": summary.extra_topics,
+        "extra_topics": summary.extra_topics[:MAX_EXTRA_TOPICS],
     }, True
 
 
