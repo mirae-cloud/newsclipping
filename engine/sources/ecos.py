@@ -95,10 +95,13 @@ def list_items(stat_code: str) -> list[dict]:
 
 
 def fetch_policy_rate_kr(years: int = 5) -> list[EcosPoint]:
+    """월별(M) 주기는 해당 월이 끝나야 집계되어 금리 인상 직후 며칠간 반영이 안 되는 지연이 있다
+    (2026-07-16 인상 후 실측 확인: M 주기는 6월 값에 머물러 있었지만 D 주기는 07-16부터 바로 반영됨).
+    미국 기준금리(DFEDTARU)와 동일하게 일별(D) 주기로 조회해 이 지연을 없앤다."""
     end = date.today()
     start = end - timedelta(days=365 * years)
     return fetch_time_series(
-        POLICY_RATE_STAT_CODE, POLICY_RATE_ITEM_CODE, "M", start.strftime("%Y%m"), end.strftime("%Y%m")
+        POLICY_RATE_STAT_CODE, POLICY_RATE_ITEM_CODE, "D", start.strftime("%Y%m%d"), end.strftime("%Y%m%d")
     )
 
 

@@ -403,7 +403,7 @@ def _safe_fetch_indicator(label: str, fetch_fn) -> list:
 def _build_economy_json() -> tuple[dict, list[str], int]:
     kr_rate = _safe_fetch_indicator("한국 기준금리", ecos.fetch_policy_rate_kr)
     for p in kr_rate:
-        p.date_str = _normalize_ecos_time(p.date_str, "M")
+        p.date_str = _normalize_ecos_time(p.date_str, "D")
 
     kr_cpi = _safe_fetch_indicator("한국 CPI", ecos.fetch_cpi_kr)
     for p in kr_cpi:
@@ -418,7 +418,7 @@ def _build_economy_json() -> tuple[dict, list[str], int]:
 
     indicators = {
         "policy_rate": {
-            "kr": _indicator_block_monthly(kr_rate),
+            "kr": _indicator_block_daily(kr_rate),  # 월별 집계는 월이 끝나야 갱신되어 인상 직후 며칠간 지연되므로 일별 사용
             "us": _indicator_block_daily(us_rate),  # DFEDTARU는 일단위로 발표되는 시리즈 (값은 FOMC 회의 때만 바뀜)
         },
         "cpi": {
