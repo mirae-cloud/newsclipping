@@ -381,6 +381,15 @@ def _indicator_block_daily(points: list) -> dict:
     }
 
 
+def _indicator_block_monthly_with_latest(monthly_points: list, latest_points: list) -> dict:
+    """1달 평균/1년 평균/history는 월별 통계 그대로 쓰되('오늘' 필드만 인상 반영이 늦는 문제가 있었으므로),
+    '오늘'만 일별 통계의 최신값으로 덮어써서 월별 집계가 끝나기 전에도 최신 금리를 바로 보여준다."""
+    block = _indicator_block_monthly(monthly_points)
+    if latest_points:
+        block["latest"] = latest_points[-1].value
+    return block
+
+
 def _normalize_ecos_time(time_str: str, cycle: str) -> str:
     if cycle == "M":
         return f"{time_str[:4]}-{time_str[4:6]}-01"
@@ -403,7 +412,9 @@ def _safe_fetch_indicator(label: str, fetch_fn) -> list:
 def _build_economy_json() -> tuple[dict, list[str], int]:
     kr_rate = _safe_fetch_indicator("한국 기준금리", ecos.fetch_policy_rate_kr)
     for p in kr_rate:
-        p.date_str = _normalize_ecos_time(p.date_str, "D")
+        p.date_str = _normalize_ecos_time(p.date_str, "M")
+
+    kr_rate_latest = _safe_fetch_indicator("한국 기준금리(최신)", ecos.fetch_policy_rate_kr_latest)
 
     kr_cpi = _safe_fetch_indicator("한국 CPI", ecos.fetch_cpi_kr)
     for p in kr_cpi:
@@ -418,7 +429,7 @@ def _build_economy_json() -> tuple[dict, list[str], int]:
 
     indicators = {
         "policy_rate": {
-            "kr": _indicator_block_daily(kr_rate),  # 월별 집계는 월이 끝나야 갱신되어 인상 직후 며칠간 지연되므로 일별 사용
+            "kr": _indicator_block_monthly_with_latest(kr_rate, kr_rate_latest),
             "us": _indicator_block_daily(us_rate),  # DFEDTARU는 일단위로 발표되는 시리즈 (값은 FOMC 회의 때만 바뀜)
         },
         "cpi": {
