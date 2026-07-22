@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-21T06:51:53.599666+00:00",
+  "generated_at": "2026-07-22T06:52:54.169266+00:00",
   "python_version": "3.11.15 (main, Jun 16 2026, 21:41:52) [GCC 13.3.0]",
   "gemini_error_samples": [],
   "economy": {
-    "raw_candidates": 758,
+    "raw_candidates": 797,
     "final_articles": 18,
     "failed_categories": []
   },
@@ -13,8 +13,8 @@
     "failed_categories": []
   },
   "global": {
-    "raw_candidates": 1575,
-    "final_articles": 80,
+    "raw_candidates": 1606,
+    "final_articles": 81,
     "failed_categories": []
   }
 }
