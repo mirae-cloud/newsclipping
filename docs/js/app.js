@@ -140,14 +140,31 @@ function formatIndicatorValue(value, key) {
 function renderIndicatorCard(container, meta) {
   const data = meta.region ? state.economy.indicators[meta.key][meta.region] : state.economy.indicators[meta.key];
 
+  // CPI는 월별로만 발표돼 '오늘'이 '1달 평균'과 항상 같은 값이라, 대신 1달/6개월/1년 평균을 보여준다.
+  const numbers =
+    meta.key === "cpi"
+      ? [
+          ["1달 평균", data.avg_1m],
+          ["6개월 평균", data.avg_6m],
+          ["1년 평균", data.avg_1y],
+        ]
+      : [
+          ["오늘", data.latest],
+          ["1달 평균", data.avg_1m],
+          ["1년 평균", data.avg_1y],
+        ];
+
   const card = document.createElement("div");
   card.className = "indicator-card" + (meta.wide ? " wide" : "");
   card.innerHTML = `
     <div class="indicator-title">${meta.label}</div>
     <div class="indicator-numbers">
-      <div><div class="label">오늘</div><div class="value today">${formatIndicatorValue(data.latest, meta.key)}${meta.unit}</div></div>
-      <div><div class="label">1달 평균</div><div class="value">${formatIndicatorValue(data.avg_1m, meta.key)}${meta.unit}</div></div>
-      <div><div class="label">1년 평균</div><div class="value">${formatIndicatorValue(data.avg_1y, meta.key)}${meta.unit}</div></div>
+      ${numbers
+        .map(
+          ([label, value], i) =>
+            `<div><div class="label">${label}</div><div class="value${i === 0 && meta.key !== "cpi" ? " today" : ""}">${formatIndicatorValue(value, meta.key)}${meta.unit}</div></div>`
+        )
+        .join("")}
     </div>
     <div class="indicator-chart"><canvas></canvas></div>
   `;

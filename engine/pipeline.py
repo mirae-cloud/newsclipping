@@ -359,12 +359,14 @@ def _simple_avg(values: list[float]) -> float | None:
 
 def _indicator_block_monthly(points: list) -> dict:
     if not points:
-        return {"latest": None, "avg_1m": None, "avg_1y": None, "history_5y": []}
+        return {"latest": None, "avg_1m": None, "avg_6m": None, "avg_1y": None, "history_5y": []}
     latest = points[-1].value
+    avg_6m = _simple_avg([p.value for p in points[-6:]])
     avg_1y = _simple_avg([p.value for p in points[-12:]])
     return {
         "latest": latest,
         "avg_1m": latest,  # 월별 발표값이라 '1달 평균'은 최신 발표값과 동일 (지시서 4-1)
+        "avg_6m": avg_6m,  # CPI 카드에서 '오늘'(=1달 평균과 중복) 대신 표시할 값
         "avg_1y": avg_1y,
         "history_5y": [{"date": p.date_str, "value": p.value} for p in points],
     }
