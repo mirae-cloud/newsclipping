@@ -301,6 +301,13 @@ def summarize_category(category_name: str, articles: list[dict]) -> CategorySumm
 - bullets: 주요 내용 요약 bullet 2~3개 (짧고 명확하게).
 - insight: 아래 규칙에 따른 파급효과 분석 한 문단.
 
+title/bullets 작성 시 반드시 지킬 것 (사실 오염 방지):
+- 해당 기사 번호(index)의 제목·설명에 명시된 내용만 근거로 작성할 것.
+- 같은 목록에 있는 다른 번호 기사의 내용(인수 대상·금액·지역·기업명 등)을 이 기사와 섞어서 쓰지 말 것.
+- 설명에 나오지 않은 사실을 추측해서 덧붙이지 말 것 — 설명이 짧아 불확실하면 그 부분은 생략할 것.
+(insight에서 다른 산업·기업과의 연관성을 언급하는 것은 예외지만, 그 경우도 INSIGHT_RULES에 따라
+'추정'/'가능성'으로 표시해 이 기사 자체의 확인된 사실과 구분할 것.)
+
 {INSIGHT_RULES}
 
 기사 목록 (번호. 제목 — 설명):
