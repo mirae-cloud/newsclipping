@@ -55,13 +55,16 @@ def _render_summary(summary: dict) -> str:
     return f'<ul style="margin:4px 0 12px;padding-left:18px;">{bullets}</ul>'
 
 
-def _render_indicator(label: str, block: dict, unit: str) -> str:
+def _render_indicator(label: str, block: dict, unit: str, is_cpi: bool = False) -> str:
     if block.get("latest") is None:
         return ""
-    return (
-        f'<p style="{STYLE_P}"><b style="color:#1a1a1a;">{html.escape(label)}</b> — '
-        f"오늘 {block['latest']}{unit} / 1달 평균 {block['avg_1m']}{unit} / 1년 평균 {block['avg_1y']}{unit}</p>"
-    )
+    # CPI는 월별로만 발표돼 '오늘'이 항상 '1달 평균'과 같은 값이라, 웹사이트와 동일하게
+    # 1달/6개월/1년 평균을 보여준다 (다른 지표는 '오늘'이 실제로 다른 값이라 그대로 유지).
+    if is_cpi:
+        summary = f"1달 평균 {block['avg_1m']}{unit} / 6개월 평균 {block['avg_6m']}{unit} / 1년 평균 {block['avg_1y']}{unit}"
+    else:
+        summary = f"오늘 {block['latest']}{unit} / 1달 평균 {block['avg_1m']}{unit} / 1년 평균 {block['avg_1y']}{unit}"
+    return f'<p style="{STYLE_P}"><b style="color:#1a1a1a;">{html.escape(label)}</b> — {summary}</p>'
 
 
 def build_email_html(economy: dict, domestic: dict, global_: dict) -> str:
@@ -73,8 +76,8 @@ def build_email_html(economy: dict, domestic: dict, global_: dict) -> str:
     ind = economy["indicators"]
     parts.append(_render_indicator("기준금리 (한국)", ind["policy_rate"]["kr"], "%"))
     parts.append(_render_indicator("기준금리 (미국)", ind["policy_rate"]["us"], "%"))
-    parts.append(_render_indicator("소비자물가 CPI (한국)", ind["cpi"]["kr"], ""))
-    parts.append(_render_indicator("소비자물가 CPI (미국)", ind["cpi"]["us"], ""))
+    parts.append(_render_indicator("소비자물가 CPI (한국)", ind["cpi"]["kr"], "", is_cpi=True))
+    parts.append(_render_indicator("소비자물가 CPI (미국)", ind["cpi"]["us"], "", is_cpi=True))
     parts.append(_render_indicator("원/달러 환율", ind["fx_usd_krw"], "원"))
     parts.append(_render_summary(economy["news"]["summary"]))
     for name, block in economy["news"]["keyword_groups"].items():
