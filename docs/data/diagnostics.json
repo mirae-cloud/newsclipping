@@ -1,33 +1,20 @@
 {
-  "generated_at": "2026-07-27T11:08:13.986019+00:00",
+  "generated_at": "2026-07-28T06:52:45.786027+00:00",
   "python_version": "3.11.15 (main, Jun 16 2026, 21:41:52) [GCC 13.3.0]",
-  "gemini_error_samples": [
-    "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
-    "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
-    "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
-    "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
-    "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
-  ],
+  "gemini_error_samples": [],
   "economy": {
-    "raw_candidates": 753,
-    "final_articles": 0,
-    "failed_categories": [
-      "성장 & 경기",
-      "통화 & 금리",
-      "무역 & 정책",
-      "금융 & 가계",
-      "주식 & 투자",
-      "물가 & 환율"
-    ]
+    "raw_candidates": 758,
+    "final_articles": 18,
+    "failed_categories": []
   },
   "domestic": {
-    "raw_candidates": 1448,
+    "raw_candidates": 1397,
     "final_articles": 81,
     "failed_categories": []
   },
   "global": {
-    "raw_candidates": 1560,
-    "final_articles": 80,
+    "raw_candidates": 1639,
+    "final_articles": 81,
     "failed_categories": []
   }
 }
