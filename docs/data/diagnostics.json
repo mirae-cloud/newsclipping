@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T22:11:05.744190+00:00",
+  "generated_at": "2026-08-16T22:07:52.016476+00:00",
   "python_version": "3.11.15 (main, Jun 16 2026, 21:41:52) [GCC 13.3.0]",
   "gemini_error_samples": [
     "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}",
@@ -9,7 +9,7 @@
     "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}"
   ],
   "economy": {
-    "raw_candidates": 628,
+    "raw_candidates": 608,
     "final_articles": 0,
     "failed_categories": [
       "통화 & 금리",
@@ -21,7 +21,7 @@
     ]
   },
   "domestic": {
-    "raw_candidates": 1207,
+    "raw_candidates": 1157,
     "final_articles": 0,
     "failed_categories": [
       "금융",
@@ -54,7 +54,7 @@
     ]
   },
   "global": {
-    "raw_candidates": 1325,
+    "raw_candidates": 1320,
     "final_articles": 0,
     "failed_categories": [
       "금융",
