@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23T22:16:13.353893+00:00",
+  "generated_at": "2026-08-24T22:21:59.091315+00:00",
   "python_version": "3.11.16 (main, Aug 13 2026, 02:46:14) [GCC 13.3.0]",
   "gemini_error_samples": [
     "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}",
@@ -9,7 +9,7 @@
     "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}"
   ],
   "economy": {
-    "raw_candidates": 614,
+    "raw_candidates": 752,
     "final_articles": 0,
     "failed_categories": [
       "통화 & 금리",
@@ -21,7 +21,7 @@
     ]
   },
   "domestic": {
-    "raw_candidates": 1202,
+    "raw_candidates": 1249,
     "final_articles": 0,
     "failed_categories": [
       "금융",
@@ -54,36 +54,36 @@
     ]
   },
   "global": {
-    "raw_candidates": 1273,
+    "raw_candidates": 1646,
     "final_articles": 0,
     "failed_categories": [
       "금융",
-      "로봇 & 반도체",
-      "M&A / Strategic Investment",
-      "헬스케어 & 라이프사이언스",
-      "공공 & 사회 & 교육",
       "TMT (기술 & 미디어 & 통신)",
-      "Financial Investment (VC/PE)",
+      "로봇 & 반도체",
+      "헬스케어 & 라이프사이언스",
       "소비재 & 리테일 (B2C)",
-      "방산",
-      "산업재 (Industrial Goods)",
-      "New Business / Business Building",
-      "Geopolitics & Regulation",
-      "Artificial Intelligence",
-      "ESG & Sustainability",
       "여행 & 항공",
       "자동차 & 모빌리티",
+      "산업재 (Industrial Goods)",
+      "방산",
       "운송 & 물류",
       "건설 & 인프라",
       "부동산",
       "소재 & 화학",
       "석탄 & 석유 & 가스",
       "에너지 & 전력",
+      "공공 & 사회 & 교육",
+      "M&A / Strategic Investment",
+      "Financial Investment (VC/PE)",
       "Corporate Finance / Turnaround",
       "Strategy",
       "PMI / Operations",
+      "New Business / Business Building",
       "New Market Entry / Go-To-Market",
-      "Risk & Resilience"
+      "Geopolitics & Regulation",
+      "ESG & Sustainability",
+      "Risk & Resilience",
+      "Artificial Intelligence"
     ]
   }
 }
