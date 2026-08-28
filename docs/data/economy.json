@@ -1,10 +1,10 @@
 {
-  "date": "2026-08-27",
-  "generated_at": "2026-08-27T01:02:16.521058+00:00",
+  "date": "2026-08-28",
+  "generated_at": "2026-08-28T05:37:12.368071+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
-        "latest": 2.75,
+        "latest": 3.0,
         "avg_1m": 2.75,
         "avg_6m": 2.542,
         "avg_1y": 2.521,
@@ -254,12 +254,8 @@
       "us": {
         "latest": 3.75,
         "avg_1m": 3.75,
-        "avg_1y": 3.882,
+        "avg_1y": 3.879,
         "history_5y": [
-          {
-            "date": "2021-08-28",
-            "value": 0.25
-          },
           {
             "date": "2021-08-29",
             "value": 0.25
@@ -7555,6 +7551,10 @@
           {
             "date": "2026-08-26",
             "value": 3.75
+          },
+          {
+            "date": "2026-08-27",
+            "value": 3.75
           }
         ]
       }
@@ -8054,9 +8054,9 @@
       }
     },
     "fx_usd_krw": {
-      "latest": 1384.6,
-      "avg_1m": 1434.383,
-      "avg_1y": 1443.447,
+      "latest": 1380.3,
+      "avg_1m": 1430.653,
+      "avg_1y": 1443.232,
       "history_5y": [
         {
           "date": "2021-08-30",
@@ -12961,6 +12961,10 @@
         {
           "date": "2026-08-27",
           "value": 1384.6
+        },
+        {
+          "date": "2026-08-28",
+          "value": 1380.3
         }
       ]
     }
@@ -12976,7 +12980,12 @@
         "articles": [],
         "extra_topics": []
       },
-      "무역 & 정책": {
+      "주식 & 투자": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "성장 & 경기": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
@@ -12991,12 +13000,7 @@
         "articles": [],
         "extra_topics": []
       },
-      "주식 & 투자": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "성장 & 경기": {
+      "무역 & 정책": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
