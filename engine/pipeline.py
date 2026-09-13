@@ -270,6 +270,41 @@ def _finalize_articles(category_blocks: dict[str, dict]) -> None:
             del article["_raw_source"]
 
 
+def _dedup_across_categories(category_blocks: dict[str, dict]) -> None:
+    """서로 다른 카테고리에 각각 분류된 기사가 사실은 같은 사건을 다루는 경우(예: 같은 M&A 건이
+    "M&A / Strategic Investment"와 산업 카테고리 양쪽에 선택됨), Gemini로 판별해 한 카테고리에만
+    남기고 나머지에서는 제거한다 (in-place)."""
+    flat = []
+    for cat_name, block in category_blocks.items():
+        for pos, article in enumerate(block["articles"]):
+            flat.append({"index": len(flat), "category": cat_name, "pos": pos, "title": article["title"]})
+
+    if len(flat) < 2:
+        return
+
+    try:
+        remove_indices = set(
+            gemini_client.find_cross_category_duplicates(
+                [{"index": a["index"], "category": a["category"], "title": a["title"]} for a in flat]
+            )
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"[gemini] 카테고리 간 중복 판별 실패: {exc}")
+        return
+
+    if not remove_indices:
+        return
+
+    to_remove_by_cat: dict[str, list[int]] = {}
+    for a in flat:
+        if a["index"] in remove_indices:
+            to_remove_by_cat.setdefault(a["category"], []).append(a["pos"])
+
+    for cat_name, positions in to_remove_by_cat.items():
+        for pos in sorted(positions, reverse=True):
+            del category_blocks[cat_name]["articles"][pos]
+
+
 def _build_overall_summary(category_blocks: dict[str, dict]) -> dict:
     top_articles = []
     for name, block in category_blocks.items():
@@ -314,6 +349,7 @@ def _build_source_json(source: str) -> tuple[dict, list[str], int]:
 
     category_blocks, failed = _build_category_blocks_parallel(allowed, grouped)
     failed = _mark_classify_failures(classify_failed, allowed, category_blocks, failed)
+    _dedup_across_categories(category_blocks)
     _finalize_articles(category_blocks)
 
     industry_json = {name: category_blocks[name] for name in categories.INDUSTRY_CATEGORIES}
@@ -344,6 +380,7 @@ def _build_economy_news_json() -> tuple[dict, list[str], int]:
 
     keyword_groups_json, failed = _build_category_blocks_parallel(allowed, grouped)
     failed = _mark_classify_failures(classify_failed, allowed, keyword_groups_json, failed)
+    _dedup_across_categories(keyword_groups_json)
     _finalize_articles(keyword_groups_json)
     summary_json = _build_overall_summary(keyword_groups_json)
 
