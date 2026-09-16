@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-09-15T23:42:18.731657+00:00",
+  "generated_at": "2026-09-16T23:50:55.514113+00:00",
   "python_version": "3.11.16 (main, Aug 13 2026, 02:46:14) [GCC 13.3.0]",
   "gemini_error_samples": [],
   "economy": {
-    "raw_candidates": 820,
-    "final_articles": 18,
+    "raw_candidates": 714,
+    "final_articles": 16,
     "failed_categories": []
   },
   "domestic": {
-    "raw_candidates": 1313,
-    "final_articles": 78,
+    "raw_candidates": 1331,
+    "final_articles": 79,
     "failed_categories": []
   },
   "global": {
-    "raw_candidates": 1534,
-    "final_articles": 76,
+    "raw_candidates": 1646,
+    "final_articles": 73,
     "failed_categories": []
   }
 }
