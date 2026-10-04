@@ -3,5 +3,6 @@ python-dotenv
 feedparser
 google-genai==1.47.0
 googlenewsdecoder
+selectolax<1.0
 pydantic
 tzdata

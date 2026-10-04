@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 import feedparser
-from googlenewsdecoder import gnewsdecoder
 
 RSS_BASE = "https://news.google.com/rss/search"
 
@@ -34,8 +33,13 @@ def resolve_link(google_link: str) -> str:
     단순 HTTP 리다이렉트가 아니라 구글 내부 batchexecute RPC를 거쳐야 하는 방식이라
     googlenewsdecoder 라이브러리를 사용한다. 구글이 공식 지원하지 않는 방식이라
     100% 보장되지 않음 — 실패 시 구글 링크를 그대로 반환.
+
+    import를 함수 안(try 안)에 둔 이유: 의존 라이브러리 업데이트로 import 자체가 깨져도(2026-10-03
+    selectolax 1.0 릴리스로 실제 발생) 파이프라인 전체가 죽지 않고 링크만 구글 경유 주소로 남게 하기 위함.
     """
     try:
+        from googlenewsdecoder import gnewsdecoder
+
         result = gnewsdecoder(google_link, interval=1)
         if result.get("status"):
             return result["decoded_url"]
