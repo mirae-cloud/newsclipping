@@ -1,20 +1,22 @@
 {
-  "generated_at": "2026-10-08T01:16:44.770328+00:00",
-  "python_version": "3.11.16 (main, Aug 13 2026, 02:46:14) [GCC 13.3.0]",
-  "gemini_error_samples": [],
+  "generated_at": "2026-10-09T01:27:23.792043+00:00",
+  "python_version": "3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]",
+  "gemini_error_samples": [
+    "1 validation error for ClassificationResult\n  JSON input should be string, bytes or bytearray [type=json_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.14/v/json_type"
+  ],
   "economy": {
-    "raw_candidates": 788,
-    "final_articles": 18,
+    "raw_candidates": 765,
+    "final_articles": 16,
     "failed_categories": []
   },
   "domestic": {
-    "raw_candidates": 1381,
-    "final_articles": 76,
+    "raw_candidates": 1391,
+    "final_articles": 75,
     "failed_categories": []
   },
   "global": {
-    "raw_candidates": 1520,
-    "final_articles": 76,
+    "raw_candidates": 1562,
+    "final_articles": 77,
     "failed_categories": []
   }
 }
