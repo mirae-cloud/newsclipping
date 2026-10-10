@@ -395,3 +395,70 @@ headlines는 각 대표 기사에 대해 카테고리명과 15~30자 내외의 �
 {articles_block}
 """
     return _generate_json(prompt, OverallSummary)
+
+
+# ---------- 누적 동향 (engine/trends.py에서 사용) ----------
+
+TREND_GROUNDING_RULES = """
+작성 시 반드시 지킬 것:
+- 하루짜리 사건이 아니라, 기간 동안 반복·누적되며 드러난 흐름과 변화를 중심으로 쓸 것
+  (무엇이 새로 등장했고, 늘었고, 사라졌고, 지속되는지).
+- 입력에 나온 내용만 근거로 쓰고, 입력에 없는 기업명·수치·결과를 덧붙이지 말 것. 근거가 약하면 생략할 것.
+- 확실한 인과가 아니면 반드시 '추정' 또는 '가능성'이라는 단어를 포함해 표시할 것.
+- 국내(KR)와 글로벌(GL) 흐름이 뚜렷이 다를 때만 그 차이를 언급할 것.
+- 각 bullet은 반드시 한 문장으로 90자를 넘지 않게 쓰고, 입력에 나온 대표 사례(기업·사건)를 가능하면 하나 포함할 것.
+- 문체는 '~했습니다/~합니다' 체로 통일할 것.
+"""
+
+
+class MonthDigest(BaseModel):
+    bullets: list[str]
+    themes: list[str]
+
+
+def summarize_month(category_name: str, ym: str, days_text: str, n_days: int, partial: bool) -> MonthDigest:
+    """days_text: 날짜별로 'MM-DD KR: 제목 / 제목 || GL: 제목 || 기타: 주제, 주제' 형태의 한 달치 입력."""
+    partial_note = (
+        f"\n(이 달은 아직 끝나지 않았거나 수집된 날이 {n_days}일뿐이므로, 그 범위에서 확인되는 흐름만 쓸 것.)\n"
+        if partial or n_days < 20
+        else ""
+    )
+    prompt = f"""
+아래는 "{category_name}" 카테고리에서 {ym} 동안 매일 선별된 기사 제목(KR=국내, GL=글로벌)과 '기타' 주제 목록이다
+(수집된 날 {n_days}일). 이 기간의 산업 동향을 요약하라.
+{partial_note}
+{TREND_GROUNDING_RULES}
+- bullets: 3~4개.
+- themes: 이 기간의 핵심 주제어 3~5개 (각 2~10자).
+
+입력:
+{days_text}
+"""
+    return _generate_json(prompt, MonthDigest)
+
+
+class TrendSummary(BaseModel):
+    headline: str
+    bullets: list[str]
+    themes: list[str]
+
+
+def synthesize_trend(category_name: str, digests_text: str, months_covered: int) -> TrendSummary:
+    """digests_text: 월별로 'YYYY-MM (N일): bullet / bullet || 주제: a, b' 형태의 월 요약 모음(오래된 달부터)."""
+    prompt = f"""
+아래는 "{category_name}" 카테고리의 월별 동향 요약 {months_covered}개월치이다(오래된 달부터). 이를 종합해
+기간 전체의 누적 변화와 동향을 정리하라.
+
+{TREND_GROUNDING_RULES}
+- 초반 대비 최근에 무엇이 달라졌는지, 기간 내내 지속된 흐름은 무엇인지를 시간 순서가 드러나게 쓸 것.
+- headline: 기간 전체를 한 줄로 요약한 문구 (30~60자, 명사형으로 끝내고 마침표를 쓰지 말 것).
+- bullets: 3~5개. 각 문장 앞에 시기를 괄호로 표기할 것: 기간 내내 이어진 흐름은 '[7~9월 지속]',
+  시기에 따라 달라진 흐름은 '[7월→9월]', 특정 시기에만 두드러진 것은 '[9월]'처럼 쓸 것.
+  가능하면 초반과 최근의 차이를 보여주는 bullet을 하나 이상 포함할 것.
+- themes: 누적 핵심 주제어 3~6개 (각 2~10자).
+- 수집된 일수가 적은 달의 요약에 대해서는 그 달을 근거로 과도한 추세를 단정하지 말 것.
+
+월별 요약:
+{digests_text}
+"""
+    return _generate_json(prompt, TrendSummary)

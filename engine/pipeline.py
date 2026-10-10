@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from engine import categories, email_sender, gemini_client
+from engine import categories, email_sender, gemini_client, trends
 from engine.sources import currents_news, ecos, fred, google_news, naver_news
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -608,6 +608,13 @@ def main():
 
     print(f"완료 — {DATA_DIR} 에 저장됨.")
 
+    # 누적 동향용 아카이브(AI 호출 없음). 이메일 실패와 무관하게 남도록 발송 전에 기록하고, 실패해도 뉴스 발송은 계속한다.
+    try:
+        archived = trends.archive_day(domestic_json["date"], domestic_json, global_json)
+        print(f"[trends] 아카이브 {archived}줄 기록")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[trends] 아카이브 실패(뉴스 발송에는 영향 없음): {exc}")
+
     # 매 실행마다 수집 단계별 수치를 커밋되는 파일로 남긴다 — Actions 로그는 저장소 admin 권한이 없으면
     # 못 보므로, git으로 당겨보는 것만으로 '원본 후보 자체가 0인지(수집 단계 문제) vs 원본은 있는데
     # 분류/요약에서 걸러졌는지(Gemini 단계 문제)'를 다음날 바로 구분할 수 있게 하기 위함.
@@ -650,6 +657,13 @@ def main():
         print("이메일 발송 완료.")
     except Exception as exc:  # noqa: BLE001
         print(f"[email] 발송 실패: {exc}")
+
+    # 월 요약·6개월 종합 갱신 — 평소엔 입력이 안 바뀌어 호출 0건이고, 새 달이 시작될 때만 수십 건을 호출한다.
+    # 실패해도 오늘 뉴스는 이미 저장·발송됐으므로 로그만 남기고 넘어간다(사용량 집계에 포함되도록 요약 출력 전에 실행).
+    try:
+        trends.update()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[trends] 동향 갱신 실패(뉴스 발송에는 영향 없음): {exc}")
 
     _print_usage_summary()
     print(f"\n총 실행 시간: {time.monotonic() - run_start:.1f}초")

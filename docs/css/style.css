@@ -625,4 +625,105 @@ main {
   .tabs {
     overflow-x: auto;
   }
+  .tab-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 10px 12px;
+  }
+}
+
+/* 동향 탭 */
+.trend-card {
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 10px;
+  background: var(--color-accent-soft);
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+
+.trend-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+}
+
+.trend-headline {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.trend-bullets {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.trend-bullets li {
+  margin-bottom: 5px;
+}
+
+.trend-tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.trend-themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.theme-chip {
+  font-size: 12px;
+  color: var(--color-sub);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.trend-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 4px 0 10px;
+}
+
+.trend-month {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: var(--color-bg);
+}
+
+.trend-month-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.trend-coverage {
+  font-size: 12px;
+  color: var(--color-sub);
+}
+
+.trend-gap {
+  font-size: 13.5px;
+  color: var(--color-sub);
 }

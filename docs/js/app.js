@@ -13,6 +13,7 @@ const state = {
   keywordsOriginal: null,
   keywordsIsDraft: false,
   keywordsView: { kind: "industry", selectedCategory: null },
+  trends: { data: null, status: "idle", kind: "industry", selectedCategory: null },
 };
 
 const KIND_LABELS = { economy: "경제", industry: "산업군", business: "Business" };
@@ -344,6 +345,143 @@ function renderCategoryTab(kind) {
   renderCategoryDetail(detail, block, { categoryLabel: s.selectedCategory, sourceLabel, kind });
 }
 
+// ---------- Trends tab (누적 동향) ----------
+
+// "[7~9월 지속] 본문"처럼 문장 앞의 시기 표기를 칩으로 분리해 보여준다.
+function renderTrendBullet(text) {
+  const m = text.match(/^\[([^\]]+)\]\s*(.*)$/s);
+  if (!m) return `<li>${escapeHtml(text)}</li>`;
+  return `<li><span class="trend-tag">${escapeHtml(m[1])}</span>${escapeHtml(m[2])}</li>`;
+}
+
+function renderThemeChips(themes) {
+  if (!themes || !themes.length) return "";
+  return `<div class="trend-themes">${themes.map((t) => `<span class="theme-chip">${escapeHtml(t)}</span>`).join("")}</div>`;
+}
+
+function renderTrendDetail(container) {
+  container.innerHTML = "";
+  const t = state.trends;
+  const entry = t.data.categories[t.kind][t.selectedCategory];
+
+  if (!entry || !entry.trend) {
+    container.innerHTML = `<div class="empty-state">누적 데이터가 부족해 아직 동향을 만들지 못했습니다.</div>`;
+    return;
+  }
+
+  const trend = entry.trend;
+  const range = trend.from && trend.to ? ` · ${trend.from.slice(5)} ~ ${trend.to.slice(5)}` : "";
+  container.insertAdjacentHTML(
+    "beforeend",
+    `<div class="trend-card">
+       <div class="trend-label">누적 ${trend.months_covered}개월 종합${range}</div>
+       <div class="trend-headline">${escapeHtml(trend.headline)}</div>
+       <ul class="trend-bullets">${trend.bullets.map(renderTrendBullet).join("")}</ul>
+       ${renderThemeChips(trend.themes)}
+     </div>`
+  );
+
+  container.insertAdjacentHTML("beforeend", `<div class="trend-section-title">월별 흐름</div>`);
+  Object.keys(entry.months)
+    .sort()
+    .reverse()
+    .forEach((ym) => {
+      const m = entry.months[ym];
+      const [y, mo] = ym.split("-").map(Number);
+      const daysInMonth = new Date(y, mo, 0).getDate();
+      const coverage = m.partial ? `${m.n_days}일 수집 · 진행 중` : `${m.n_days}/${daysInMonth}일 수집`;
+      const body = m.gap
+        ? `<div class="trend-gap">수집된 날이 ${m.n_days}일뿐이라 이 달은 요약하지 않았습니다.</div>`
+        : `<ul class="trend-bullets">${m.bullets.map(renderTrendBullet).join("")}</ul>${renderThemeChips(m.themes)}`;
+      container.insertAdjacentHTML(
+        "beforeend",
+        `<div class="trend-month">
+           <div class="trend-month-head"><b>${y}년 ${mo}월</b><span class="trend-coverage">${coverage}</span></div>
+           ${body}
+         </div>`
+      );
+    });
+}
+
+async function renderTrends() {
+  const view = document.getElementById("view-trends");
+  const t = state.trends;
+
+  // 동향 데이터는 이 탭을 처음 열 때만 불러온다(다른 탭 로딩에 영향 없음).
+  if (!t.data) {
+    view.innerHTML = `<div class="empty-state">동향 데이터를 불러오는 중...</div>`;
+    if (t.status === "loading") return;
+    t.status = "loading";
+    try {
+      t.data = await fetchFresh("data/trends.json");
+      t.status = "ready";
+    } catch (err) {
+      t.status = "idle";
+      console.error(err);
+      view.innerHTML = `<div class="empty-state">동향 데이터를 불러오지 못했습니다.</div>`;
+      return;
+    }
+    if (state.currentTab !== "trends") return;
+  }
+
+  view.innerHTML = "";
+
+  const title = document.createElement("div");
+  title.className = "block-title";
+  title.textContent = "동향";
+  view.appendChild(title);
+
+  view.insertAdjacentHTML(
+    "beforeend",
+    `<p class="keywords-help">일별로 선별된 기사 제목을 AI가 월 단위로 요약하고 최근 최대 6개월로 종합한 누적 동향입니다(추정 포함).
+     자동 수집이 중단된 기간은 비어 있을 수 있습니다.</p>`
+  );
+
+  const kindGrid = document.createElement("div");
+  kindGrid.className = "kind-filter-grid";
+  [
+    ["industry", "산업군"],
+    ["business", "Business"],
+  ].forEach(([kind, label]) => {
+    const btn = document.createElement("button");
+    btn.className = "kind-filter-btn" + (t.kind === kind ? " active" : "");
+    btn.textContent = label;
+    btn.addEventListener("click", () => {
+      t.kind = kind;
+      t.selectedCategory = null;
+      renderTrends();
+    });
+    kindGrid.appendChild(btn);
+  });
+  view.appendChild(kindGrid);
+
+  const grid = document.createElement("div");
+  grid.className = "category-grid";
+  view.appendChild(grid);
+
+  const detail = document.createElement("div");
+  detail.className = "category-detail";
+  view.appendChild(detail);
+
+  Object.keys(t.data.categories[t.kind]).forEach((name) => {
+    const btn = document.createElement("button");
+    btn.className = "category-btn" + (t.selectedCategory === name ? " active" : "");
+    btn.textContent = name;
+    btn.addEventListener("click", () => {
+      t.selectedCategory = name;
+      grid.querySelectorAll(".category-btn").forEach((b) => b.classList.toggle("active", b === btn));
+      renderTrendDetail(detail);
+    });
+    grid.appendChild(btn);
+  });
+
+  if (!t.selectedCategory) {
+    detail.innerHTML = `<div class="empty-state">위에서 카테고리를 선택하면 누적 동향이 표시됩니다.</div>`;
+    return;
+  }
+  renderTrendDetail(detail);
+}
+
 // ---------- Saved tab ----------
 
 function renderSaved() {
@@ -612,6 +750,7 @@ function switchTab(tab) {
   if (tab === "economy") renderEconomy();
   if (tab === "industry") renderCategoryTab("industry");
   if (tab === "business") renderCategoryTab("business");
+  if (tab === "trends") renderTrends();
   if (tab === "saved") renderSaved();
   if (tab === "keywords") renderKeywords();
 }

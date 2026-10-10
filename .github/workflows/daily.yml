@@ -11,6 +11,11 @@ on:
 permissions:
   contents: write
 
+# 수동 실행이 자동 실행과 겹쳐 동시에 push하며 충돌하는 일을 막는다(뒤에 온 실행은 대기, 취소하지 않음).
+concurrency:
+  group: daily-news-clipping
+  cancel-in-progress: false
+
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
@@ -42,6 +47,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/*.json
+          git add docs/data/*.json archive/*.jsonl
           git diff --staged --quiet || git commit -m "chore: 뉴스클리핑 데이터 갱신 ($(date -u +%Y-%m-%d))"
           git push
