@@ -1,20 +1,89 @@
 {
-  "generated_at": "2026-11-19T02:49:24.450908+00:00",
+  "generated_at": "2026-11-20T02:55:06.571719+00:00",
   "python_version": "3.11.18 (main, Oct 26 2026, 02:48:29) [GCC 15.2.0]",
-  "gemini_error_samples": [],
+  "gemini_error_samples": [
+    "402 RESOURCE_EXHAUSTED. {'error': {'code': 402, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}",
+    "402 RESOURCE_EXHAUSTED. {'error': {'code': 402, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}",
+    "402 RESOURCE_EXHAUSTED. {'error': {'code': 402, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}",
+    "402 RESOURCE_EXHAUSTED. {'error': {'code': 402, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}",
+    "402 RESOURCE_EXHAUSTED. {'error': {'code': 402, 'message': 'Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ', 'status': 'RESOURCE_EXHAUSTED'}}"
+  ],
   "economy": {
-    "raw_candidates": 751,
-    "final_articles": 16,
-    "failed_categories": []
+    "raw_candidates": 733,
+    "final_articles": 0,
+    "failed_categories": [
+      "통화 & 금리",
+      "물가 & 환율",
+      "성장 & 경기",
+      "주식 & 투자",
+      "무역 & 정책",
+      "금융 & 가계"
+    ]
   },
   "domestic": {
-    "raw_candidates": 1466,
-    "final_articles": 78,
-    "failed_categories": []
+    "raw_candidates": 1410,
+    "final_articles": 0,
+    "failed_categories": [
+      "금융",
+      "TMT (기술 & 미디어 & 통신)",
+      "로봇 & 반도체",
+      "헬스케어 & 라이프사이언스",
+      "소비재 & 리테일 (B2C)",
+      "여행 & 항공",
+      "자동차 & 모빌리티",
+      "산업재 (Industrial Goods)",
+      "방산",
+      "운송 & 물류",
+      "건설 & 인프라",
+      "부동산",
+      "소재 & 화학",
+      "석탄 & 석유 & 가스",
+      "에너지 & 전력",
+      "공공 & 사회 & 교육",
+      "M&A / Strategic Investment",
+      "Financial Investment (VC/PE)",
+      "Corporate Finance / Turnaround",
+      "Strategy",
+      "PMI / Operations",
+      "New Business / Business Building",
+      "New Market Entry / Go-To-Market",
+      "Geopolitics & Regulation",
+      "ESG & Sustainability",
+      "Risk & Resilience",
+      "Artificial Intelligence"
+    ]
   },
   "global": {
-    "raw_candidates": 1306,
-    "final_articles": 74,
-    "failed_categories": []
+    "raw_candidates": 1447,
+    "final_articles": 0,
+    "failed_categories": [
+      "금융",
+      "TMT (기술 & 미디어 & 통신)",
+      "로봇 & 반도체",
+      "헬스케어 & 라이프사이언스",
+      "소비재 & 리테일 (B2C)",
+      "여행 & 항공",
+      "자동차 & 모빌리티",
+      "산업재 (Industrial Goods)",
+      "방산",
+      "운송 & 물류",
+      "건설 & 인프라",
+      "부동산",
+      "소재 & 화학",
+      "석탄 & 석유 & 가스",
+      "에너지 & 전력",
+      "공공 & 사회 & 교육",
+      "M&A / Strategic Investment",
+      "Financial Investment (VC/PE)",
+      "Corporate Finance / Turnaround",
+      "Strategy",
+      "PMI / Operations",
+      "New Business / Business Building",
+      "New Market Entry / Go-To-Market",
+      "Geopolitics & Regulation",
+      "ESG & Sustainability",
+      "Risk & Resilience",
+      "Artificial Intelligence"
+    ]
   }
 }
