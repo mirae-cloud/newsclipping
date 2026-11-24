@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-23",
-  "generated_at": "2026-11-23T01:58:50.461099+00:00",
+  "date": "2026-11-24",
+  "generated_at": "2026-11-24T05:30:34.125225+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
@@ -256,10 +256,6 @@
         "avg_1m": 4.0,
         "avg_1y": 3.808,
         "history_5y": [
-          {
-            "date": "2021-11-24",
-            "value": 0.25
-          },
           {
             "date": "2021-11-25",
             "value": 0.25
@@ -7555,6 +7551,10 @@
           {
             "date": "2026-11-22",
             "value": 4.0
+          },
+          {
+            "date": "2026-11-23",
+            "value": 4.0
           }
         ]
       }
@@ -8054,14 +8054,10 @@
       }
     },
     "fx_usd_krw": {
-      "latest": 1337.3,
-      "avg_1m": 1336.453,
-      "avg_1y": 1429.31,
+      "latest": 1346.6,
+      "avg_1m": 1336.813,
+      "avg_1y": 1429.25,
       "history_5y": [
-        {
-          "date": "2021-11-24",
-          "value": 1188.9
-        },
         {
           "date": "2021-11-25",
           "value": 1188.5
@@ -12965,6 +12961,10 @@
         {
           "date": "2026-11-23",
           "value": 1337.3
+        },
+        {
+          "date": "2026-11-24",
+          "value": 1346.6
         }
       ]
     }
@@ -12990,17 +12990,17 @@
         "articles": [],
         "extra_topics": []
       },
+      "물가 & 환율": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
       "통화 & 금리": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
       },
       "금융 & 가계": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "물가 & 환율": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
