@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-24",
-  "generated_at": "2026-11-24T05:30:34.125225+00:00",
+  "date": "2026-11-25",
+  "generated_at": "2026-11-25T04:32:24.781919+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
@@ -256,10 +256,6 @@
         "avg_1m": 4.0,
         "avg_1y": 3.808,
         "history_5y": [
-          {
-            "date": "2021-11-25",
-            "value": 0.25
-          },
           {
             "date": "2021-11-26",
             "value": 0.25
@@ -7555,6 +7551,10 @@
           {
             "date": "2026-11-23",
             "value": 4.0
+          },
+          {
+            "date": "2026-11-24",
+            "value": 4.0
           }
         ]
       }
@@ -8054,14 +8054,10 @@
       }
     },
     "fx_usd_krw": {
-      "latest": 1346.6,
-      "avg_1m": 1336.813,
-      "avg_1y": 1429.25,
+      "latest": 1343.6,
+      "avg_1m": 1336.917,
+      "avg_1y": 1429.165,
       "history_5y": [
-        {
-          "date": "2021-11-25",
-          "value": 1188.5
-        },
         {
           "date": "2021-11-26",
           "value": 1189.7
@@ -12965,6 +12961,10 @@
         {
           "date": "2026-11-24",
           "value": 1346.6
+        },
+        {
+          "date": "2026-11-25",
+          "value": 1343.6
         }
       ]
     }
@@ -12975,7 +12975,22 @@
       "headlines": []
     },
     "keyword_groups": {
+      "통화 & 금리": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
       "주식 & 투자": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "물가 & 환율": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "금융 & 가계": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
@@ -12986,21 +13001,6 @@
         "extra_topics": []
       },
       "성장 & 경기": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "물가 & 환율": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "통화 & 금리": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "금융 & 가계": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
