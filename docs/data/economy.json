@@ -1,10 +1,10 @@
 {
-  "date": "2026-11-25",
-  "generated_at": "2026-11-25T04:32:24.781919+00:00",
+  "date": "2026-11-26",
+  "generated_at": "2026-11-26T03:46:47.987230+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
-        "latest": 3.0,
+        "latest": 3.25,
         "avg_1m": 3.0,
         "avg_6m": 2.792,
         "avg_1y": 2.646,
@@ -256,10 +256,6 @@
         "avg_1m": 4.0,
         "avg_1y": 3.808,
         "history_5y": [
-          {
-            "date": "2021-11-26",
-            "value": 0.25
-          },
           {
             "date": "2021-11-27",
             "value": 0.25
@@ -7555,6 +7551,10 @@
           {
             "date": "2026-11-24",
             "value": 4.0
+          },
+          {
+            "date": "2026-11-25",
+            "value": 4.0
           }
         ]
       }
@@ -8054,14 +8054,10 @@
       }
     },
     "fx_usd_krw": {
-      "latest": 1343.6,
-      "avg_1m": 1336.917,
-      "avg_1y": 1429.165,
+      "latest": 1343.9,
+      "avg_1m": 1337.093,
+      "avg_1y": 1429.063,
       "history_5y": [
-        {
-          "date": "2021-11-26",
-          "value": 1189.7
-        },
         {
           "date": "2021-11-29",
           "value": 1193.0
@@ -12965,6 +12961,10 @@
         {
           "date": "2026-11-25",
           "value": 1343.6
+        },
+        {
+          "date": "2026-11-26",
+          "value": 1343.9
         }
       ]
     }
@@ -12975,22 +12975,17 @@
       "headlines": []
     },
     "keyword_groups": {
-      "통화 & 금리": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
       "주식 & 투자": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
       },
-      "물가 & 환율": {
+      "성장 & 경기": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
       },
-      "금융 & 가계": {
+      "통화 & 금리": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
@@ -13000,7 +12995,12 @@
         "articles": [],
         "extra_topics": []
       },
-      "성장 & 경기": {
+      "금융 & 가계": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "물가 & 환율": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
