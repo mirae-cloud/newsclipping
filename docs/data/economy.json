@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-27",
-  "generated_at": "2026-11-27T03:47:30.279760+00:00",
+  "date": "2026-11-28",
+  "generated_at": "2026-11-28T03:31:08.097480+00:00",
   "indicators": {
     "policy_rate": {
       "kr": {
@@ -256,10 +256,6 @@
         "avg_1m": 4.0,
         "avg_1y": 3.808,
         "history_5y": [
-          {
-            "date": "2021-11-28",
-            "value": 0.25
-          },
           {
             "date": "2021-11-29",
             "value": 0.25
@@ -7555,6 +7551,10 @@
           {
             "date": "2026-11-26",
             "value": 4.0
+          },
+          {
+            "date": "2026-11-27",
+            "value": 4.0
           }
         ]
       }
@@ -12979,7 +12979,7 @@
       "headlines": []
     },
     "keyword_groups": {
-      "물가 & 환율": {
+      "무역 & 정책": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
@@ -12989,22 +12989,22 @@
         "articles": [],
         "extra_topics": []
       },
-      "성장 & 경기": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
-      "무역 & 정책": {
-        "sub_summary_bullets": [],
-        "articles": [],
-        "extra_topics": []
-      },
       "금융 & 가계": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
       },
+      "성장 & 경기": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
       "주식 & 투자": {
+        "sub_summary_bullets": [],
+        "articles": [],
+        "extra_topics": []
+      },
+      "물가 & 환율": {
         "sub_summary_bullets": [],
         "articles": [],
         "extra_topics": []
